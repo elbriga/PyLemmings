@@ -1,6 +1,4 @@
-# Wireframe17
-Projects and assets from Wireframe #17
+Lemmings clone usando
 
-Source Code: path-following Lemmings, pages 38-39, by Rik Cross
+https://pygame-zero.readthedocs.io/en/stable/installation.html
 
-The code example is licenced under Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported.
