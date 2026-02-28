@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import pgzrun
+import pygame
 from time import sleep
 from PIL import Image
 
@@ -11,9 +12,9 @@ WIDTH=800
 level_image = 'level'
 BACKGROUND_COLOUR = (114,114,201,255)
 
-# store the colour of each pixel in the level image
-img = Image.open('images/level.png')
-pixels = [[img.getpixel((x, y)) for y in range(HEIGHT)] for x in range(WIDTH)]
+level_surface = pygame.image.load('images/level.png').convert()
+level_surface.set_colorkey(BACKGROUND_COLOUR)
+ground_mask = pygame.mask.from_surface(level_surface)
 
 # a list to keep track of the lemmings
 lemmings = []
@@ -26,12 +27,9 @@ interval = 10
 # returns 'True' if the pixel specified is 'ground'
 # (i.e. anything except BACKGROUND_COLOUR)
 def groundatposition(pos):
-    # ensure position contains integer values
-    pos = (int(pos[0]),int(pos[1]))
-    # get the colour from the 'pixels' list
-    if pixels[pos[0]][pos[1]] != BACKGROUND_COLOUR:
-        return True
-    else:
+    try:
+        return ground_mask.get_at((int(pos[0]), int(pos[1])))
+    except IndexError:
         return False
 
 class Lemming(Actor):
@@ -91,7 +89,9 @@ def draw():
     screen.blit(level_image,(0,0))
     # draw lemmings
     for i in lemmings:
-
         i.draw()
+
+
+
 
 pgzrun.go()
