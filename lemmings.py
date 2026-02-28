@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+import pgzrun
 from time import sleep
 from PIL import Image
 
@@ -89,4 +91,7 @@ def draw():
     screen.blit(level_image,(0,0))
     # draw lemmings
     for i in lemmings:
+
         i.draw()
+
+pgzrun.go()
