@@ -8,37 +8,65 @@ from PIL import Image
 HEIGHT=800
 WIDTH=800
 
-# level information
-level_image = 'level'
-BACKGROUND_COLOUR = (114,114,201,255)
+class Level:
+    def __init__(self, image):
+        self.max_lemmings = 10
+        self.image = image
+        self.start_position = (100,100)
+        self.end_position = (580,710)
+        self.background_colour = (114,114,201,255)
+        self.surface = pygame.image.load('images/level.png').convert()
+        self.surface.set_colorkey(self.background_colour)
+        self.ground_mask = pygame.mask.from_surface(self.surface)
+        
+    # returns 'True' if the pixel specified is 'ground'
+    # (i.e. anything except BACKGROUND_COLOUR)
+    def groundatposition(self, pos):
+        try:
+            return self.ground_mask.get_at((int(pos[0]), int(pos[1])))
+        except IndexError:
+            return False
 
-level_surface = pygame.image.load('images/level.png').convert()
-level_surface.set_colorkey(BACKGROUND_COLOUR)
-ground_mask = pygame.mask.from_surface(level_surface)
+class Game:
+    def __init__(self, level):
+        self.lemmings = []
+        self.points = 0
+        self.add_timer = 0
+        self.add_interval = 10
+        self.add_done = False
+        self.level = level
+    
+    def update(self):
+        # increment the timer and create a new
+        # lemming if the interval has passed
+        if not self.add_done and len(self.lemmings) < self.level.max_lemmings:
+            self.add_timer += 0.1
+            if self.add_timer > self.add_interval:
+                self.add_timer = 0
+                self.lemmings.append(Lemming())
+        else:
+            self.add_done = True
+        # update each lemming's position in the level
+        for lem in self.lemmings:
+            lem.update()
 
-points = 0
-# a list to keep track of the lemmings
-lemmings = []
-max_lemmings = 10
-start_position = (100,100)
-end_position = (580,710)
-# a timer and interval for creating new lemmings
-timer = 0
-interval = 10
-done_adding = False
+    def draw(self):
+        screen.clear()
+        # draw the level
+        screen.blit(self.level.image,(0,0))
+        # draw lemmings
+        for lem in self.lemmings:
+            lem.draw()
 
-# returns 'True' if the pixel specified is 'ground'
-# (i.e. anything except BACKGROUND_COLOUR)
-def groundatposition(pos):
-    try:
-        return ground_mask.get_at((int(pos[0]), int(pos[1])))
-    except IndexError:
-        return False
+        # draw score
+        screen.draw.text(f"Points: {self.points}", (10, 10), color="white", fontsize=40)
+
+game = Game(Level('level'))
 
 
 class Lemming(Actor):
     def __init__(self, **kwargs):
-        super().__init__(image='lemming', pos=start_position, anchor=('left','top'), **kwargs)
+        super().__init__(image='lemming', pos=game.level.start_position, anchor=('left','top'), **kwargs)
         self.direction = 1
         self.climbheight = 4
         self.width = 10
@@ -51,8 +79,8 @@ class Lemming(Actor):
     def update(self):
         global points
         # if there's no ground below a lemming (check both corners), it is falling
-        bottomleft = groundatposition((self.pos[0], self.pos[1]+self.height))
-        bottomright = groundatposition((self.pos[0]+(self.width-1), self.pos[1]+self.height))
+        bottomleft = game.level.groundatposition((self.pos[0], self.pos[1]+self.height))
+        bottomright = game.level.groundatposition((self.pos[0]+(self.width-1), self.pos[1]+self.height))
         if not bottomleft and not bottomright:
             self.y += 1
         # if not falling, a lemming is walking
@@ -68,7 +96,7 @@ class Lemming(Actor):
                     positioninfront = (self.pos[0]+self.width, self.pos[1]+(self.height-1)-height)
                 else:
                     positioninfront = (self.pos[0]-1, self.pos[1]+(self.height-1)-height)
-                if not groundatposition(positioninfront):
+                if not game.level.groundatposition(positioninfront):
                     self.x += self.direction
                     # rise up to new ground level
                     self.y -= height
@@ -80,37 +108,12 @@ class Lemming(Actor):
             if not found:
                 self.direction *= -1
             
-            if self.isNear(end_position, 15):
-                lemmings.remove(self)
-                points += 1
-
+            if self.isNear(game.level.end_position, 15):
+                game.lemmings.remove(self)
+                game.points += 1
 
 def update():
-    global timer, done_adding
-    # increment the timer and create a new
-    # lemming if the interval has passed
-    if not done_adding and len(lemmings) < max_lemmings:
-        timer += 0.1
-        if timer > interval:
-            timer = 0
-            lemmings.append(Lemming())
-    else:
-        done_adding = True
-    # update each lemming's position in the level
-    for i in lemmings:
-        i.update()
-
+    game.update()
 def draw():
-    screen.clear()
-    # draw the level
-    screen.blit(level_image,(0,0))
-    # draw lemmings
-    for i in lemmings:
-        i.draw()
-
-    # draw score
-    screen.draw.text(f"Points: {points}", (10, 10), color="white", fontsize=40)
-
-
-
+    game.draw()
 pgzrun.go()
