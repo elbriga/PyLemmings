@@ -71,8 +71,8 @@ class Lemming():
         self.y = game.level.start_position[1]
         self.direction = 1
         self.climbheight = 4
-        self.width = 10
-        self.height = 20
+        self.width = 20
+        self.height = 40
         self.frames = Assets.animations["lemming_walk"]
         self.frame = 0
         self.anim_timer = 0
@@ -89,7 +89,7 @@ class Lemming():
     # update a lemming's position in the level
     def update(self):
         self.anim_timer += 1
-        if self.anim_timer > 6:
+        if self.anim_timer > 3:
             self.anim_timer = 0
             self.frame = (self.frame + 1) % len(self.frames)
         

@@ -2,14 +2,18 @@ import pygame
 
 class Assets:
     animations = {}
+    final_width = 10  # x2
+    final_height = 20 # x2
 
     @staticmethod
     def slice_sprites(sheet, total, xi, yi, step, width, height):
         sprites = []
         for i in range(0, total):
             x = xi + i * step
-            sprite = pygame.Surface((width, height), pygame.SRCALPHA)
-            sprite.blit(sheet, (0, 0), (x, yi, width, height))
+            sprite = pygame.Surface((Assets.final_width, Assets.final_height), pygame.SRCALPHA)
+            sprite.blit(sheet, (0, Assets.final_height - height), (x, yi, width, height))
+            sprite.set_colorkey((0, 0, 0))
+            sprite = pygame.transform.scale2x(sprite)
             sprites.append(sprite.convert_alpha())
         return sprites
 
