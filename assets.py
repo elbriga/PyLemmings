@@ -14,6 +14,7 @@ class Assets:
             sprite.blit(sheet, (0, Assets.final_height - height), (x, yi, width, height))
             sprite.set_colorkey((0, 0, 0))
             sprite = pygame.transform.scale2x(sprite)
+            sprite = pygame.transform.scale2x(sprite)
             sprites.append(sprite.convert_alpha())
         return sprites
 
@@ -22,3 +23,4 @@ class Assets:
         sheet = pygame.image.load("images/lemming_sheet.png").convert_alpha()
 
         cls.animations["lemming_walk"] = cls.slice_sprites(sheet, 8, 18, 0, 16, 10, 10)
+        cls.animations["lemming_fall"] = cls.slice_sprites(sheet, 4, 14, 20, 16, 10, 10)

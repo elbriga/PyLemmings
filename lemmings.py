@@ -71,8 +71,8 @@ class Lemming():
         self.y = game.level.start_position[1]
         self.direction = 1
         self.climbheight = 4
-        self.width = 20
-        self.height = 40
+        self.width = 40
+        self.height = 80
         self.frames = Assets.animations["lemming_walk"]
         self.frame = 0
         self.anim_timer = 0
@@ -81,10 +81,11 @@ class Lemming():
         return self.x > pos[0] - range and self.x < pos[0] + range and self.y > pos[1] - range and self.y < pos[1] + range
     
     def draw(self):
-        frame = self.frames[self.frame]
+        frame = self.frames[self.frame % len(self.frames)]
         if self.direction == -1:
             frame = pygame.transform.flip(frame, True, False)
         screen.blit(frame, (self.x, self.y))
+        pygame.draw.circle(screen.surface, (255, 0, 0), (int(self.x), int(self.y)), 5)
 
     # update a lemming's position in the level
     def update(self):
@@ -97,9 +98,11 @@ class Lemming():
         bottomleft = self.game.level.groundatposition((self.x, self.y + self.height))
         bottomright = self.game.level.groundatposition((self.x + (self.width - 1), self.y + self.height))
         if not bottomleft and not bottomright:
+            self.frames = Assets.animations["lemming_fall"]
             self.y += 1
         # if not falling, a lemming is walking
         else:
+            self.frames = Assets.animations["lemming_walk"]
             height = 0
             found = False
             # find the height of the ground in front of a lemming
