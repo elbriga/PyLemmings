@@ -16,13 +16,16 @@ level_surface = pygame.image.load('images/level.png').convert()
 level_surface.set_colorkey(BACKGROUND_COLOUR)
 ground_mask = pygame.mask.from_surface(level_surface)
 
+points = 0
 # a list to keep track of the lemmings
 lemmings = []
 max_lemmings = 10
 start_position = (100,100)
+end_position = (580,710)
 # a timer and interval for creating new lemmings
 timer = 0
 interval = 10
+done_adding = False
 
 # returns 'True' if the pixel specified is 'ground'
 # (i.e. anything except BACKGROUND_COLOUR)
@@ -32,6 +35,7 @@ def groundatposition(pos):
     except IndexError:
         return False
 
+
 class Lemming(Actor):
     def __init__(self, **kwargs):
         super().__init__(image='lemming', pos=start_position, anchor=('left','top'), **kwargs)
@@ -39,8 +43,13 @@ class Lemming(Actor):
         self.climbheight = 4
         self.width = 10
         self.height = 20
+
+    def isNear(self, pos, range):
+        return self.x > pos[0] - range and self.x < pos[0] + range and self.y > pos[1] - range and self.y < pos[1] + range
+
     # update a lemming's position in the level
     def update(self):
+        global points
         # if there's no ground below a lemming (check both corners), it is falling
         bottomleft = groundatposition((self.pos[0], self.pos[1]+self.height))
         bottomright = groundatposition((self.pos[0]+(self.width-1), self.pos[1]+self.height))
@@ -69,16 +78,24 @@ class Lemming(Actor):
             # turn the lemming around if the ground in front
             # is too high to climb
             if not found:
-                    self.direction *= -1
+                self.direction *= -1
+            
+            if self.isNear(end_position, 15):
+                lemmings.remove(self)
+                points += 1
+
 
 def update():
-    global timer
+    global timer, done_adding
     # increment the timer and create a new
     # lemming if the interval has passed
-    timer += 0.1
-    if timer > interval and len(lemmings) < max_lemmings:
-        timer = 0
-        lemmings.append(Lemming())
+    if not done_adding and len(lemmings) < max_lemmings:
+        timer += 0.1
+        if timer > interval:
+            timer = 0
+            lemmings.append(Lemming())
+    else:
+        done_adding = True
     # update each lemming's position in the level
     for i in lemmings:
         i.update()
@@ -91,6 +108,8 @@ def draw():
     for i in lemmings:
         i.draw()
 
+    # draw score
+    screen.draw.text(f"Points: {points}", (10, 10), color="white", fontsize=40)
 
 
 
