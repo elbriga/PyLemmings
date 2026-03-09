@@ -1,5 +1,4 @@
 import pygame
-from lemmingState import Stoper
 
 class Events:
     @staticmethod
@@ -20,6 +19,6 @@ class Events:
                 lem = game.hovered
                 if lem and lem.nomeEstado == "Andando":
                     lem.set_state("Parado")
-                    lem.setAnimation("stop")
+                    lem.set_animation("stop")
         
         return True

@@ -24,31 +24,31 @@ class Lemming(Entity):
     def update(self):
         self.state.update()
 
-    def isNear(self, pos, range):
+    def is_near(self, pos, range):
         return self.x > pos[0] - range and self.x < pos[0] + range and self.y > pos[1] - range and self.y < pos[1] + range
     
-    def isOnFloor(self):
-        bottomleft = self.game.level.groundatposition((self.x - self.width // 2, self.y + 1))
+    def is_on_floor(self):
+        bottomleft = self.game.level.ground_at_position((self.x - self.width // 2, self.y + 1))
         if not bottomleft:
-            bottomright = self.game.level.groundatposition((self.x + self.width // 2, self.y + 1))
+            bottomright = self.game.level.ground_at_position((self.x + self.width // 2, self.y + 1))
             if not bottomright:
                 return False
         return True
     
-    def floorHeightInFront(self):
+    def floor_height_in_front(self):
         height = 0
         # find the height of the ground in front of a lemming up to the maximum height a lemming can climb
         while height <= self.climbheight:
             # the pixel 'in front' of a lemming will depend on the direction it's traveling
             positioninfront = (self.x + self.width // 2 * self.direction, self.y - height)
-            if not self.game.level.groundatposition(positioninfront):
+            if not self.game.level.ground_at_position(positioninfront):
                 break
 
             height += 1
 
         return height
 
-    def setAnimation(self, name):
+    def set_animation(self, name):
         self.frames = Assets.animations[f"lemming_{name}"]
 
     def set_state(self, nomeEstado):

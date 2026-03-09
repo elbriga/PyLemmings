@@ -13,7 +13,7 @@ class Level:
         
     # returns 'True' if the pixel specified is 'ground'
     # (i.e. anything except BACKGROUND_COLOUR)
-    def groundatposition(self, pos):
+    def ground_at_position(self, pos):
         try:
             return self.ground_mask.get_at((int(pos[0]), int(pos[1])))
         except IndexError:
