@@ -12,9 +12,7 @@ class Walker(LemmingState):
 
         lem.setAnimation("walk")
 
-        bottomleft = level.groundatposition((lem.x - lem.width / 2, lem.y + 1))
-        bottomright = level.groundatposition((lem.x + lem.width / 2, lem.y + 1))
-        if not bottomleft and not bottomright:
+        if not lem.isOnFloor():
             lem.state = Faller(lem)
             return
 
@@ -52,11 +50,8 @@ class Walker(LemmingState):
 class Faller(LemmingState):
     def update(self):
         lem = self.lem
-        level = lem.game.level
 
-        bottomleft = level.groundatposition((lem.x - lem.width / 2, lem.y + 1))
-        bottomright = level.groundatposition((lem.x + lem.width / 2, lem.y + 1))
-        if bottomleft or bottomright:
+        if lem.isOnFloor():
             lem.state = Walker(lem)
             return
 
