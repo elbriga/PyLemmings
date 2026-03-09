@@ -2,8 +2,8 @@ import pygame
 
 class Assets:
     animations = {}
-    final_width = 10  # x2
-    final_height = 20 # x2
+    final_width = 10  # x4
+    final_height = 20 # x4
 
     @staticmethod
     def slice_sprites(sheet, total, xi, yi, step, width, height):
@@ -24,3 +24,4 @@ class Assets:
 
         cls.animations["lemming_walk"] = cls.slice_sprites(sheet, 8, 18, 0, 16, 10, 10)
         cls.animations["lemming_fall"] = cls.slice_sprites(sheet, 4, 14, 20, 16, 10, 10)
+        cls.animations["lemming_die"]  = cls.slice_sprites(sheet, 16, 19, 138, 16, 10, 10)

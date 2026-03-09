@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import pgzrun
 import pygame
 from time import sleep
 from PIL import Image
@@ -13,7 +12,6 @@ WIDTH=800
 class Level:
     def __init__(self, image):
         self.max_lemmings = 10
-        self.image = image
         self.start_position = (100,100)
         self.end_position = (580,710)
         self.background_colour = (114,114,201,255)
@@ -55,23 +53,26 @@ class Game:
             lem.update()
 
     def draw(self):
-        screen.clear()
         # draw the level
-        screen.blit(self.level.image,(0,0))
+        screen.blit(self.level.surface,(0,0))
         # draw lemmings
         for lem in self.lemmings:
             lem.draw()
         # draw score
-        screen.draw.text(f"Points: {self.points}", (10, 10), color="white", fontsize=40)
+        font = pygame.font.SysFont(None, 40)
+        text = font.render(f"Pontos: {self.points} / {len(self.lemmings)}", True, (255,255,255))
+        screen.blit(text, (10,10))
 
 class Lemming():
     def __init__(self, game, **kwargs):
         self.game = game
+        self.selected = False
         self.x = game.level.start_position[0]
         self.y = game.level.start_position[1]
         self.direction = 1
         self.climbheight = 4
         self.falling = 0
+        self.dying = False
         self.width = 40
         self.height = 80
         self.frames = Assets.animations["lemming_walk"]
@@ -94,6 +95,9 @@ class Lemming():
         if self.anim_timer > 3:
             self.anim_timer = 0
             self.frame = (self.frame + 1) % len(self.frames)
+            if self.dying and self.frame == 0:
+                self.game.lemmings.remove(self)
+                return
         
         # if there's no ground below a lemming (check both corners), it is falling
         bottomleft = self.game.level.groundatposition((self.x - self.width / 2, self.y + 1))
@@ -105,38 +109,65 @@ class Lemming():
             self.y += 1
         # if not falling, a lemming is walking
         else:
-            self.frames = Assets.animations["lemming_walk"]
-            self.falling = 0
-            height = 0
-            found = False
-            # find the height of the ground in front of a lemming
-            # up to the maximum height a lemming can climb
-            while (found == False) and (height <= self.climbheight):
-                # the pixel 'in front' of a lemming will depend on
-                # the direction it's traveling
-                if self.direction == 1:
-                    positioninfront = (self.x + self.width / 2, self.y - height)
-                else:
-                    positioninfront = (self.x - self.width / 2, self.y - height)
-                if not self.game.level.groundatposition(positioninfront):
-                    self.x += self.direction
-                    # rise up to new ground level
-                    self.y -= height
-                    found = True
+            if self.falling > 200:
+                # Die!
+                if not self.dying:
+                    self.frame = 0
+                    self.frames = Assets.animations["lemming_die"]
+                    self.dying = True
+            else:
+                self.frames = Assets.animations["lemming_walk"]
+                self.falling = 0
+                height = 0
+                found = False
+                # find the height of the ground in front of a lemming
+                # up to the maximum height a lemming can climb
+                while (found == False) and (height <= self.climbheight):
+                    # the pixel 'in front' of a lemming will depend on
+                    # the direction it's traveling
+                    if self.direction == 1:
+                        positioninfront = (self.x + self.width / 2, self.y - height)
+                    else:
+                        positioninfront = (self.x - self.width / 2, self.y - height)
+                    if not self.game.level.groundatposition(positioninfront):
+                        self.x += self.direction
+                        # rise up to new ground level
+                        self.y -= height
+                        found = True
 
-                height += 1
-            # turn the lemming around if the ground in front
-            # is too high to climb
-            if not found:
-                self.direction *= -1
-            
-            if self.isNear(self.game.level.end_position, 15):
-                self.game.lemmings.remove(self)
-                self.game.points += 1
+                    height += 1
+                # turn the lemming around if the ground in front
+                # is too high to climb
+                if not found:
+                    self.direction *= -1
+                
+                if self.isNear(self.game.level.end_position, 15):
+                    self.game.lemmings.remove(self)
+                    self.game.points += 1
+
+pygame.init()
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("PyLemmings")
 
 jogo = Game(Level('level'))
-def update():
+
+clock = pygame.time.Clock()
+
+jogo = Game(Level('level'))
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
     jogo.update()
-def draw():
+
+    screen.fill((0,0,0))
     jogo.draw()
-pgzrun.go()
+
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
+
