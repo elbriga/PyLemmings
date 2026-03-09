@@ -5,8 +5,6 @@ from lemmingState import LemmingState
 class Lemming(Entity):
     def __init__(self, game, **kwargs):
         Entity.__init__(self, game, 40, 80)
-        self.x = game.level.start_position[0]
-        self.y = game.level.start_position[1]
         self.stateName = ""
         self.direction = 1
         self.climbheight = 4
@@ -18,20 +16,24 @@ class Lemming(Entity):
         frame = self.frames[self.frame % len(self.frames)]
         if self.direction == -1:
             frame = pygame.transform.flip(frame, True, False)
-        self.game.screen.blit(frame, (self.x - self.width // 2, self.y - self.height))
+        self.game.screen.blit(frame, self.rect)
         if self.hasUmbrella and self.stateName == "Andando":
-            pygame.draw.circle(self.game.screen, (255, 255, 0), (int(self.x), int(self.y)), 5)
+            pygame.draw.circle(self.game.screen, (255, 255, 0), (self.x, self.y), 5)
+        if self.game.debug:
+            pygame.draw.circle(self.game.screen, (255, 0, 0), (self.rect.right, self.rect.bottom + 1), 5)
+            pygame.draw.circle(self.game.screen, (255, 255, 0), (self.rect.left, self.rect.bottom + 1), 5)
 
     def update(self):
         self.state.update()
 
-    def is_near(self, pos, range):
-        return self.x > pos[0] - range and self.x < pos[0] + range and self.y > pos[1] - range and self.y < pos[1] + range
+    def is_near(self, pos, distance):
+        area = pygame.Rect(pos[0] - distance, pos[1] - distance, distance * 2, distance * 2)
+        return self.rect.colliderect(area)
     
     def is_on_floor(self):
-        bottomleft = self.game.level.ground_at_position((self.x - self.width // 2, self.y + 1))
+        bottomleft = self.game.level.ground_at_position((self.rect.left, self.rect.bottom + 1))
         if not bottomleft:
-            bottomright = self.game.level.ground_at_position((self.x + self.width // 2, self.y + 1))
+            bottomright = self.game.level.ground_at_position((self.rect.right, self.rect.bottom + 1))
             if not bottomright:
                 return False
         return True
@@ -41,7 +43,10 @@ class Lemming(Entity):
         # find the height of the ground in front of a lemming up to the maximum height a lemming can climb
         while height <= self.climbheight:
             # the pixel 'in front' of a lemming will depend on the direction it's traveling
-            positioninfront = (self.x + self.width // 2 * self.direction, self.y - height)
+            if self.direction == 1:
+                positioninfront = (self.rect.right, self.rect.bottom - height)
+            else:
+                positioninfront = (self.rect.left, self.rect.bottom - height)
             if not self.game.level.ground_at_position(positioninfront):
                 break
 

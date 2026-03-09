@@ -16,7 +16,6 @@ class Walker(LemmingState):
             lem.frame = 0
             lem.dead = True
             return
-        
         lem.falling = 0
 
         lem.set_animation("walk")
@@ -25,19 +24,22 @@ class Walker(LemmingState):
             lem.set_state("Caindo")
             return
 
-        height = lem.floor_height_in_front()
-        if height <= lem.climbheight:
-            lem.x += lem.direction
-            # rise up to new ground level
-            lem.y -= height
-        else:
-            lem.direction *= -1
+        next_rect = lem.rect.move(lem.direction, 0)
+        blocker = lem.game.get_blocker(next_rect)
 
-        if lem.is_near(lem.game.level.end_position, 15):
-            lem.game.points += 1
-            lem.dead = True
-            # Remove now
-            lem.frame = -1
+        if blocker:
+            lem.direction *= -1
+            return
+
+        height = lem.floor_height_in_front()
+        if height > lem.climbheight:
+            lem.direction *= -1
+            return
+        
+        # Andar
+        lem.rect.x += lem.direction
+        # Subir o terreno se preciso
+        lem.rect.y -= height
 
 class Faller(LemmingState):
     def update(self):
@@ -55,7 +57,7 @@ class Faller(LemmingState):
         else:
             delta = 2
 
-        lem.y += delta
+        lem.rect.y += delta
         lem.falling += delta
 
         if lem.falling > 100:
@@ -73,18 +75,14 @@ class Floater(LemmingState):
             lem.set_state("Andando")
             return
 
-        lem.y += 1
+        lem.rect.y += 1
 
-        #lem.falling += 1
-        #if lem.falling > 3:
-        #    lem.set_animation("fall")
-
-class Stoper(LemmingState):
+class Blocker(LemmingState):
     def update(self):
         pass
 
 LemmingState.states = {
-    "Parado": Stoper,
+    "Parado": Blocker,
     "Andando": Walker,
     "Caindo": Faller,
     "Flutuando": Floater

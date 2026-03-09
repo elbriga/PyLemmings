@@ -1,15 +1,23 @@
+import pygame
 from assets import Assets
 
 class Entity:
     def __init__(self, game, width, height):
         self.game = game
-        self.dead = False
-        self.width = width
-        self.height = height
+        self.rect = pygame.Rect(game.level.start_position[0], game.level.start_position[1], width, height)
         self.frames = []
         self.frame = 0
         self.anim_timer = 0
         self.anim_next = ""
+        self.dead = False
+    
+    @property
+    def x(self):
+        return self.rect.centerx
+
+    @property
+    def y(self):
+        return self.rect.bottom
 
     def update(self):
         pass

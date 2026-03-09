@@ -13,6 +13,7 @@ class Game:
         self.add_interval = 10
         self.paused = False
         self.hovered = None
+        self.debug = True
         Assets.load()
     
     def update(self):
@@ -35,6 +36,12 @@ class Game:
         for e in self.entities[:]:
             if not e.dead:
                 e.update()
+                # Checar pela saida
+                if isinstance(e, Lemming):
+                    if e.is_near(self.level.end_position, 15):
+                        self.points += 1
+                        e.dead = True
+                        e.frame = -1 # Remover agora
 
             e.anim_timer += 1
             if e.anim_timer > 3:
@@ -55,7 +62,7 @@ class Game:
             e.draw()
         # desenhar o selecionado
         if self.hovered:
-            pygame.draw.circle(self.screen, (0,255,0), (self.hovered.x, self.hovered.y - self.hovered.height // 4), 25, 3)
+            pygame.draw.circle(self.screen, (0,255,0), (self.hovered.x, self.hovered.y - self.hovered.rect.height // 4), 25, 3)
         # draw score
         font = pygame.font.SysFont(None, 40)
         text = font.render(f"Pontos: {self.points} / {self.level.numLemmings}", True, (255,255,255))
@@ -81,3 +88,13 @@ class Game:
                 best_dist = dist
 
         return best
+
+    def get_blocker(self, rect):
+        for e in self.entities:
+            if isinstance(e, Lemming) and e.stateName == "Parado":
+                block_area = e.rect.inflate(20, 10)
+
+                if rect.colliderect(block_area):
+                    return e
+
+        return None
