@@ -18,8 +18,10 @@ class Lemming(Entity):
         frame = self.frames[self.frame % len(self.frames)]
         if self.direction == -1:
             frame = pygame.transform.flip(frame, True, False)
-        self.game.screen.blit(frame, (self.x - self.width / 2, self.y - self.height))
-        #pygame.draw.circle(self.game.screen, (255, 0, 0), (int(self.x), int(self.y)), 5)
+        self.game.screen.blit(frame, (self.x - self.width // 2, self.y - self.height))
+        if self.selected and not self.dead:
+            pygame.draw.rect(self.game.screen, (0, 255, 0), (int(self.x - self.width // 2), int(self.y - self.height), self.width, self.height), 1, 3)
+            #pygame.draw.circle(self.game.screen, (255, 0, 0), (int(self.x), int(self.y)), 5)
 
     def update(self):
         self.state.update()
@@ -28,9 +30,9 @@ class Lemming(Entity):
         return self.x > pos[0] - range and self.x < pos[0] + range and self.y > pos[1] - range and self.y < pos[1] + range
     
     def isOnFloor(self):
-        bottomleft = self.game.level.groundatposition((self.x - self.width / 2, self.y + 1))
+        bottomleft = self.game.level.groundatposition((self.x - self.width // 2, self.y + 1))
         if not bottomleft:
-            bottomright = self.game.level.groundatposition((self.x + self.width / 2, self.y + 1))
+            bottomright = self.game.level.groundatposition((self.x + self.width // 2, self.y + 1))
             if not bottomright:
                 return False
         return True
@@ -40,7 +42,7 @@ class Lemming(Entity):
         # find the height of the ground in front of a lemming up to the maximum height a lemming can climb
         while height <= self.climbheight:
             # the pixel 'in front' of a lemming will depend on the direction it's traveling
-            positioninfront = (self.x + self.width / 2 * self.direction, self.y - height)
+            positioninfront = (self.x + self.width // 2 * self.direction, self.y - height)
             if not self.game.level.groundatposition(positioninfront):
                 break
 

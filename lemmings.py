@@ -2,6 +2,7 @@
 import pygame
 from game import Game
 from level import Level
+from events import Events
 
 # screen size
 HEIGHT=800
@@ -17,8 +18,9 @@ clock = pygame.time.Clock()
 running = True
 while running:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        running = Events.exec(jogo, event)
+        if not running:
+            break
 
     jogo.update()
 
@@ -26,7 +28,7 @@ while running:
     jogo.draw()
 
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(60) # game.speed
 
 pygame.quit()
 

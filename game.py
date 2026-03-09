@@ -11,9 +11,13 @@ class Game:
         self.add_timer = 0
         self.add_interval = 10
         self.level = level
+        self.paused = False
         Assets.load()
     
     def update(self):
+        if self.paused:
+            return
+        
         if self.tot_lemmings < self.level.num_lemmings:
             # increment the timer and create a new
             # lemming if the interval has passed
@@ -43,5 +47,43 @@ class Game:
             e.draw()
         # draw score
         font = pygame.font.SysFont(None, 40)
-        text = font.render(f"Pontos: {self.points} / {len(self.entities)}", True, (255,255,255))
+        text = font.render(f"Pontos: {self.points} / {self.get_lemmings_alive()}", True, (255,255,255))
         self.screen.blit(text, (10,10))
+    
+    def get_lemmings_alive(self):
+        count = 0
+        for e in self.entities:
+            if isinstance(e, Lemming):
+                if not e.dead:
+                    count += 1
+        return count
+    
+    def get_lemming_near(self, pos, radius=80):
+        mx, my = pos
+        print(f"x:{mx} y:{my}")
+
+        best = None
+        best_dist = radius * radius
+
+        for lem in self.entities:
+            if not isinstance(lem, Lemming):
+                continue
+            if lem.dead:
+                continue
+
+            dx = lem.x - mx
+            dy = lem.y - my
+
+            dist = dx * dx + dy * dy
+            print(f"dist:{dist} - best:{best_dist}")
+            if dist < best_dist:
+                best = lem
+                best_dist = dist
+
+        return best
+    
+    def set_selected(self, lem_sel):
+        for lem in self.entities:
+            if not isinstance(lem, Lemming):
+                continue
+            lem.selected = (lem == lem_sel)
