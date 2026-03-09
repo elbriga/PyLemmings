@@ -20,6 +20,7 @@ class Assets:
 
     @classmethod
     def load(cls):
+        # https://www.spriters-resource.com/amiga_amiga_cd32/lemmings/asset/37732/
         sheet = pygame.image.load("images/lemming_sheet.png").convert_alpha()
 
         cls.animations["lemming_walk"] = cls.slice_sprites(sheet, 8, 18, 0, 16, 10, 10)
