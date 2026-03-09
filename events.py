@@ -20,9 +20,11 @@ class Events:
                 if event.button == 1:  # botao esquerdo
                     lem.hasUmbrella = True
 
-                if event.button == 2:  # botao direito
+                if event.button == 2:  # botao meio
                     if lem.stateName == "Andando":
                         lem.set_state("Parado")
                         lem.set_animation("stop")
+                    elif lem.stateName == "Parado":
+                        lem.set_state("Andando")
         
         return True
