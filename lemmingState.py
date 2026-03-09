@@ -47,14 +47,23 @@ class Faller(LemmingState):
             lem.set_state("Andando")
             return
 
-        lem.y += 2
 
-        lem.falling += 2
-        if lem.falling > 10:
+        if lem.falling > 100:
+            delta = 4
+        elif lem.falling > 50:
+            delta = 3
+        else:
+            delta = 2
+
+        lem.y += delta
+        lem.falling += delta
+
+        if lem.falling > 100:
+            if lem.hasUmbrella:
+                lem.set_state("Flutuando")
+                lem.set_animation("open", "float")
+        elif lem.falling > 10:
             lem.set_animation("fall")
-        if lem.falling > 70 and lem.hasUmbrella:
-            lem.set_state("Flutuando")
-            lem.set_animation("open", "float")
 
 class Floater(LemmingState):
     def update(self):

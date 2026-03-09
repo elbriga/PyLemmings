@@ -19,7 +19,7 @@ class Lemming(Entity):
         if self.direction == -1:
             frame = pygame.transform.flip(frame, True, False)
         self.game.screen.blit(frame, (self.x - self.width // 2, self.y - self.height))
-        if self.hasUmbrella:
+        if self.hasUmbrella and self.stateName == "Andando":
             pygame.draw.circle(self.game.screen, (255, 255, 0), (int(self.x), int(self.y)), 5)
 
     def update(self):
