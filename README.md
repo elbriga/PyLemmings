@@ -1,8 +1,11 @@
-Lemmings clone usando
+Lemmings clone usando PyGame
 
-https://pygame-zero.readthedocs.io/en/stable/installation.html
-
+Em Debian Based:
 ```
-pip3 install pgzero
-pip3 install Pillow
+apt install python3-pygame
 ``` 
+
+senão...
+```
+pip3 install pygame
+```
