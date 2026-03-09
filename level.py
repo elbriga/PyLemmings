@@ -11,8 +11,7 @@ class Level:
         self.surface.set_colorkey(self.backgroundColour)
         self.groundMask = pygame.mask.from_surface(self.surface)
         
-    # returns 'True' if the pixel specified is 'ground'
-    # (i.e. anything except backgroundColour)
+    # Verifica se um pixel eh solido no mapa ou nos Blocker's
     def is_solid(self, pos):
         try:
             return self.groundMask.get_at((int(pos[0]), int(pos[1])))

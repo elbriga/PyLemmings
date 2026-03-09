@@ -44,9 +44,9 @@ class Lemming(Entity):
     
     def floor_height_in_front(self):
         height = 0
-        # find the height of the ground in front of a lemming up to the maximum height a lemming can climb
+        # Achar a altura do chao na frente do lemming, ate a altura que ele consegue subir
         while height <= self.climbHeight:
-            # the pixel 'in front' of a lemming will depend on the direction it's traveling
+            # O pixel 'na frente' do lemming depende da direcao dele
             if self.direction == 1:
                 positionInFront = (self.rect.right, self.rect.bottom - height)
             else:

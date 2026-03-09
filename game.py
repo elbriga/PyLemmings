@@ -24,15 +24,14 @@ class Game:
             return
         
         if self.totLemmings < self.level.numLemmings:
-            # increment the timer and create a new
-            # lemming if the interval has passed
             self.addTimer += 0.1
+            # Add lemming se o intervalo passou
             if self.addTimer > self.addInterval:
                 self.addTimer = 0
                 self.totLemmings += 1
                 self.entities.append(Lemming(self))
 
-        # update each entity's in the level
+        # Atualizar as entidades
         for e in self.entities[:]:
             if not e.dead:
                 e.update()
@@ -43,6 +42,7 @@ class Game:
                         e.dead = True
                         e.frame = -1 # Remover agora
 
+            # Animacao
             e.animTimer += 1
             if e.animTimer > 3:
                 e.animTimer = 0
@@ -55,15 +55,15 @@ class Game:
                         e.animNext = ""
 
     def draw(self):
-        # draw the level
+        # Desenhar o level
         self.screen.blit(self.level.surface,(0,0))
-        # draw entities
+        # Desenhar as entidades
         for e in self.entities:
             e.draw()
-        # desenhar o selecionado
+        # Desenhar o selecionado
         if self.hovered:
             pygame.draw.circle(self.screen, (0,255,0), (self.hovered.x, self.hovered.y - self.hovered.rect.height // 4), 25, 3)
-        # draw score
+        # Desenhar o score
         font = pygame.font.SysFont(None, 40)
         text = font.render(f"Pontos: {self.points} / {self.level.numLemmings}", True, (255,255,255))
         self.screen.blit(text, (10,10))
