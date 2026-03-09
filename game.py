@@ -18,7 +18,7 @@ class Game:
     
     @property
     def lemmings(self):
-        return [e for e in self.entities if isinstance(e, Lemming) and not e.dead]
+        return (e for e in self.entities if isinstance(e, Lemming) and not e.dead)
     
     def update(self):
         mx, my = pygame.mouse.get_pos()
