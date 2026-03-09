@@ -4,7 +4,7 @@ from assets import Assets
 class Entity:
     def __init__(self, game, width, height):
         self.game = game
-        self.rect = pygame.Rect(game.level.startPosition[0], game.level.startPosition[1], width, height)
+        self.rect = pygame.Rect(game.level.startPosition[0], game.level.startPosition[1] - height, width, height)
         self.frames = []
         self.frame = 0
         self.animTimer = 0
