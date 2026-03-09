@@ -6,11 +6,11 @@ class Game:
     def __init__(self, screen, level):
         self.screen = screen
         self.entities = []
+        self.level = level
         self.points = 0
         self.tot_lemmings = 0
         self.add_timer = 0
         self.add_interval = 10
-        self.level = level
         self.paused = False
         self.hovered = None
         Assets.load()
@@ -22,7 +22,7 @@ class Game:
         if self.paused:
             return
         
-        if self.tot_lemmings < self.level.num_lemmings:
+        if self.tot_lemmings < self.level.numLemmings:
             # increment the timer and create a new
             # lemming if the interval has passed
             self.add_timer += 0.1
@@ -40,8 +40,12 @@ class Game:
             if e.anim_timer > 3:
                 e.anim_timer = 0
                 e.frame = (e.frame + 1) % len(e.frames)
-                if e.dead and e.frame == 0:
-                    self.entities.remove(e)
+                if e.frame == 0:
+                    if e.dead:
+                        self.entities.remove(e)
+                    elif e.anim_next != "":
+                        e.set_animation(e.anim_next)
+                        e.anim_next = ""
 
     def draw(self):
         # draw the level
@@ -54,16 +58,8 @@ class Game:
             pygame.draw.circle(self.screen, (0,255,0), (self.hovered.x, self.hovered.y - self.hovered.height // 4), 25, 3)
         # draw score
         font = pygame.font.SysFont(None, 40)
-        text = font.render(f"Pontos: {self.points} / {self.get_lemmings_alive()}", True, (255,255,255))
+        text = font.render(f"Pontos: {self.points} / {self.level.numLemmings}", True, (255,255,255))
         self.screen.blit(text, (10,10))
-    
-    def get_lemmings_alive(self):
-        count = 0
-        for e in self.entities:
-            if isinstance(e, Lemming):
-                if not e.dead:
-                    count += 1
-        return count
     
     def get_lemming_near(self, pos, radius=80):
         best = None

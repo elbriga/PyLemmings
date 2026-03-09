@@ -1,5 +1,4 @@
 import pygame
-from assets import Assets
 from entity import Entity
 from lemmingState import LemmingState
 
@@ -8,10 +7,11 @@ class Lemming(Entity):
         Entity.__init__(self, game, 40, 80)
         self.x = game.level.start_position[0]
         self.y = game.level.start_position[1]
-        self.nomeEstado = ""
+        self.stateName = ""
         self.direction = 1
         self.climbheight = 4
         self.falling = 0
+        self.hasUmbrella = False
         self.set_state("Andando")
 
     def draw(self):
@@ -19,7 +19,8 @@ class Lemming(Entity):
         if self.direction == -1:
             frame = pygame.transform.flip(frame, True, False)
         self.game.screen.blit(frame, (self.x - self.width // 2, self.y - self.height))
-        #pygame.draw.circle(self.game.screen, (255, 0, 0), (int(self.x), int(self.y)), 5)
+        if self.hasUmbrella:
+            pygame.draw.circle(self.game.screen, (255, 255, 0), (int(self.x), int(self.y)), 5)
 
     def update(self):
         self.state.update()
@@ -48,10 +49,6 @@ class Lemming(Entity):
 
         return height
 
-    def set_animation(self, name):
-        self.frames = Assets.animations[f"lemming_{name}"]
-
-    def set_state(self, nomeEstado):
-        self.nomeEstado = nomeEstado
-        classe = LemmingState.estados[nomeEstado]
-        self.state = classe(self)
+    def set_state(self, stateName):
+        self.stateName = stateName
+        self.state = LemmingState.states[stateName](self)

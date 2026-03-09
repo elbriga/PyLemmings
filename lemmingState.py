@@ -47,18 +47,36 @@ class Faller(LemmingState):
             lem.set_state("Andando")
             return
 
+        lem.y += 2
+
+        lem.falling += 2
+        if lem.falling > 10:
+            lem.set_animation("fall")
+        if lem.falling > 70 and lem.hasUmbrella:
+            lem.set_state("Flutuando")
+            lem.set_animation("open", "float")
+
+class Floater(LemmingState):
+    def update(self):
+        lem = self.lem
+
+        if lem.is_on_floor():
+            lem.set_state("Andando")
+            return
+
         lem.y += 1
 
-        lem.falling += 1
-        if lem.falling > 3:
-            lem.set_animation("fall")
+        #lem.falling += 1
+        #if lem.falling > 3:
+        #    lem.set_animation("fall")
 
 class Stoper(LemmingState):
     def update(self):
         pass
 
-LemmingState.estados = {
+LemmingState.states = {
     "Parado": Stoper,
     "Andando": Walker,
-    "Caindo": Faller
+    "Caindo": Faller,
+    "Flutuando": Floater
 }

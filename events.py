@@ -15,10 +15,14 @@ class Events:
             
             
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # botao esquerdo
+            if game.hovered:
                 lem = game.hovered
-                if lem and lem.nomeEstado == "Andando":
-                    lem.set_state("Parado")
-                    lem.set_animation("stop")
+                if event.button == 1:  # botao esquerdo
+                    lem.hasUmbrella = True
+
+                if event.button == 2:  # botao direito
+                    if lem.stateName == "Andando":
+                        lem.set_state("Parado")
+                        lem.set_animation("stop")
         
         return True
