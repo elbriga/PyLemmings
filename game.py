@@ -12,9 +12,13 @@ class Game:
         self.add_interval = 10
         self.level = level
         self.paused = False
+        self.hovered = None
         Assets.load()
     
     def update(self):
+        mx, my = pygame.mouse.get_pos()
+        self.hovered = self.get_lemming_near((mx, my))
+
         if self.paused:
             return
         
@@ -45,6 +49,9 @@ class Game:
         # draw entities
         for e in self.entities:
             e.draw()
+        # desenhar o selecionado
+        if self.hovered:
+            pygame.draw.circle(self.screen, (0,255,0), (self.hovered.x, self.hovered.y - self.hovered.height // 4), 25, 3)
         # draw score
         font = pygame.font.SysFont(None, 40)
         text = font.render(f"Pontos: {self.points} / {self.get_lemmings_alive()}", True, (255,255,255))
@@ -59,10 +66,8 @@ class Game:
         return count
     
     def get_lemming_near(self, pos, radius=80):
-        mx, my = pos
-        print(f"x:{mx} y:{my}")
-
         best = None
+        mx, my = pos
         best_dist = radius * radius
 
         for lem in self.entities:
@@ -75,15 +80,8 @@ class Game:
             dy = lem.y - my
 
             dist = dx * dx + dy * dy
-            print(f"dist:{dist} - best:{best_dist}")
             if dist < best_dist:
                 best = lem
                 best_dist = dist
 
         return best
-    
-    def set_selected(self, lem_sel):
-        for lem in self.entities:
-            if not isinstance(lem, Lemming):
-                continue
-            lem.selected = (lem == lem_sel)

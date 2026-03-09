@@ -22,7 +22,7 @@ class Walker(LemmingState):
         lem.setAnimation("walk")
 
         if not lem.isOnFloor():
-            lem.setState(Faller)
+            lem.set_state("Caindo")
             return
 
         height = lem.floorHeightInFront()
@@ -44,7 +44,7 @@ class Faller(LemmingState):
         lem = self.lem
 
         if lem.isOnFloor():
-            lem.setState(Walker)
+            lem.set_state("Andando")
             return
 
         lem.y += 1
@@ -52,3 +52,13 @@ class Faller(LemmingState):
         lem.falling += 1
         if lem.falling > 3:
             lem.setAnimation("fall")
+
+class Stoper(LemmingState):
+    def update(self):
+        pass
+
+LemmingState.estados = {
+    "Parado": Stoper,
+    "Andando": Walker,
+    "Caindo": Faller
+}

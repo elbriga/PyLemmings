@@ -26,3 +26,4 @@ class Assets:
         cls.animations["lemming_fall"] = cls.slice_sprites(sheet, 4, 14, 20, 16, 10, 10)
         # Die from falling
         cls.animations["lemming_splat"] = cls.slice_sprites(sheet, 16, 19, 138, 16, 10, 10)
+        cls.animations["lemming_stop"] = cls.slice_sprites(sheet, 16, 20, 148, 16, 10, 10)

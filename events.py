@@ -1,4 +1,5 @@
 import pygame
+from lemmingState import Stoper
 
 class Events:
     @staticmethod
@@ -16,8 +17,9 @@ class Events:
             
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # botao esquerdo
-                lem = game.get_lemming_near(event.pos)
-                if lem:
-                    game.set_selected(lem)
+                lem = game.hovered
+                if lem and lem.nomeEstado == "Andando":
+                    lem.set_state("Parado")
+                    lem.setAnimation("stop")
         
         return True
