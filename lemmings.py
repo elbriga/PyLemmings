@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import pygame
 from game import Game
-from level import Level
 from events import Events
 
 # screen size
@@ -12,7 +11,7 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PyLemmings")
 
-jogo = Game(screen, Level('level'))
+jogo = Game(screen, 'level')
 
 clock = pygame.time.Clock()
 running = True

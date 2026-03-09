@@ -1,14 +1,15 @@
 import pygame
 from assets import Assets
 from lemming import Lemming
-
+from level import Level
 class Game:
-    def __init__(self, screen, level):
+    def __init__(self, screen, levelName):
         self.screen = screen
         self.entities = []
-        self.level = level
+        self.level = Level(levelName)
         self.points = 0
         self.totLemmings = 0
+        self.minHeightToDie = 200
         self.addTimer = 0
         self.addInterval = 10
         self.paused = False

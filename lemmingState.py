@@ -8,9 +8,8 @@ class LemmingState:
 class Walker(LemmingState):
     def update(self):
         lem = self.lem
-        level = lem.game.level
 
-        if lem.falling > level.minHeightToDie:
+        if lem.falling > lem.game.minHeightToDie:
             # Die!
             lem.set_animation("splat")
             lem.frame = 0
