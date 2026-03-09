@@ -10,7 +10,7 @@ class Walker(LemmingState):
         lem = self.lem
         level = lem.game.level
 
-        if lem.falling > level.max_height_to_die:
+        if lem.falling > level.minHeightToDie:
             # Die!
             lem.set_animation("splat")
             lem.frame = 0
@@ -24,15 +24,15 @@ class Walker(LemmingState):
             lem.set_state("Caindo")
             return
 
-        next_rect = lem.rect.move(lem.direction, 0)
-        blocker = lem.game.get_blocker(next_rect)
+        nextRect = lem.rect.move(lem.direction, 0)
+        blocker = lem.game.get_blocker(nextRect)
 
         if blocker:
             lem.direction *= -1
             return
 
         height = lem.floor_height_in_front()
-        if height > lem.climbheight:
+        if height > lem.climbHeight:
             lem.direction *= -1
             return
         

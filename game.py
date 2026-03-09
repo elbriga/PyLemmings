@@ -8,9 +8,9 @@ class Game:
         self.entities = []
         self.level = level
         self.points = 0
-        self.tot_lemmings = 0
-        self.add_timer = 0
-        self.add_interval = 10
+        self.totLemmings = 0
+        self.addTimer = 0
+        self.addInterval = 10
         self.paused = False
         self.hovered = None
         self.debug = True
@@ -23,13 +23,13 @@ class Game:
         if self.paused:
             return
         
-        if self.tot_lemmings < self.level.numLemmings:
+        if self.totLemmings < self.level.numLemmings:
             # increment the timer and create a new
             # lemming if the interval has passed
-            self.add_timer += 0.1
-            if self.add_timer > self.add_interval:
-                self.add_timer = 0
-                self.tot_lemmings += 1
+            self.addTimer += 0.1
+            if self.addTimer > self.addInterval:
+                self.addTimer = 0
+                self.totLemmings += 1
                 self.entities.append(Lemming(self))
 
         # update each entity's in the level
@@ -38,21 +38,21 @@ class Game:
                 e.update()
                 # Checar pela saida
                 if isinstance(e, Lemming):
-                    if e.is_near(self.level.end_position, 15):
+                    if e.is_near(self.level.endPosition, 15):
                         self.points += 1
                         e.dead = True
                         e.frame = -1 # Remover agora
 
-            e.anim_timer += 1
-            if e.anim_timer > 3:
-                e.anim_timer = 0
+            e.animTimer += 1
+            if e.animTimer > 3:
+                e.animTimer = 0
                 e.frame = (e.frame + 1) % len(e.frames)
                 if e.frame == 0:
                     if e.dead:
                         self.entities.remove(e)
-                    elif e.anim_next != "":
-                        e.set_animation(e.anim_next)
-                        e.anim_next = ""
+                    elif e.animNext != "":
+                        e.set_animation(e.animNext)
+                        e.animNext = ""
 
     def draw(self):
         # draw the level
