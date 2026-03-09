@@ -84,7 +84,7 @@ class Lemming():
         frame = self.frames[self.frame % len(self.frames)]
         if self.direction == -1:
             frame = pygame.transform.flip(frame, True, False)
-        screen.blit(frame, (self.x, self.y))
+        screen.blit(frame, (self.x - self.width / 2, self.y - self.height))
         pygame.draw.circle(screen.surface, (255, 0, 0), (int(self.x), int(self.y)), 5)
 
     # update a lemming's position in the level
@@ -95,8 +95,8 @@ class Lemming():
             self.frame = (self.frame + 1) % len(self.frames)
         
         # if there's no ground below a lemming (check both corners), it is falling
-        bottomleft = self.game.level.groundatposition((self.x, self.y + self.height))
-        bottomright = self.game.level.groundatposition((self.x + (self.width - 1), self.y + self.height))
+        bottomleft = self.game.level.groundatposition((self.x - self.width / 2, self.y + 1))
+        bottomright = self.game.level.groundatposition((self.x + self.width / 2, self.y + 1))
         if not bottomleft and not bottomright:
             self.frames = Assets.animations["lemming_fall"]
             self.y += 1
@@ -111,9 +111,9 @@ class Lemming():
                 # the pixel 'in front' of a lemming will depend on
                 # the direction it's traveling
                 if self.direction == 1:
-                    positioninfront = (self.x + self.width, self.y + (self.height - 1) - height)
+                    positioninfront = (self.x + self.width / 2, self.y - height)
                 else:
-                    positioninfront = (self.x - 1, self.y + (self.height - 1) - height)
+                    positioninfront = (self.x - self.width / 2, self.y - height)
                 if not self.game.level.groundatposition(positioninfront):
                     self.x += self.direction
                     # rise up to new ground level
