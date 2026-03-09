@@ -3,6 +3,7 @@ import pygame
 class Level:
     def __init__(self, image):
         self.max_lemmings = 10
+        self.max_height_to_die = 200
         self.start_position = (100,100)
         self.end_position = (580,710)
         self.background_colour = (114,114,201,255)

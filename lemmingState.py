@@ -10,10 +10,19 @@ class Walker(LemmingState):
         lem = self.lem
         level = lem.game.level
 
+        if lem.falling > level.max_height_to_die:
+            # Die!
+            lem.setAnimation("splat")
+            lem.frame = 0
+            lem.dead = True
+            return
+        
+        lem.falling = 0
+
         lem.setAnimation("walk")
 
         if not lem.isOnFloor():
-            lem.state = Faller(lem)
+            lem.setState(Faller)
             return
 
         height = 0
@@ -23,6 +32,7 @@ class Walker(LemmingState):
         while not found and height <= lem.climbheight:
             # the pixel 'in front' of a lemming will depend on
             # the direction it's traveling
+# TODO :: lem.floorHeightInMyfront
             if lem.direction == 1:
                 positioninfront = (lem.x + lem.width / 2, lem.y - height)
             else:
@@ -52,7 +62,7 @@ class Faller(LemmingState):
         lem = self.lem
 
         if lem.isOnFloor():
-            lem.state = Walker(lem)
+            lem.setState(Walker)
             return
 
         lem.y += 1

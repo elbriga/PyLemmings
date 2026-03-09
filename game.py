@@ -27,7 +27,9 @@ class Game:
 
         # update each entity's in the level
         for e in self.entities[:]:
-            e.update()
+            if not e.dead:
+                e.update()
+
             e.anim_timer += 1
             if e.anim_timer > 3:
                 e.anim_timer = 0
