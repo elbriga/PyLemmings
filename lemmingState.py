@@ -25,32 +25,14 @@ class Walker(LemmingState):
             lem.setState(Faller)
             return
 
-        height = 0
-        found = False
-        # find the height of the ground in front of a lemming
-        # up to the maximum height a lemming can climb
-        while not found and height <= lem.climbheight:
-            # the pixel 'in front' of a lemming will depend on
-            # the direction it's traveling
-# TODO :: lem.floorHeightInMyfront
-            if lem.direction == 1:
-                positioninfront = (lem.x + lem.width / 2, lem.y - height)
-            else:
-                positioninfront = (lem.x - lem.width / 2, lem.y - height)
-
-            if not level.groundatposition(positioninfront):
-                lem.x += lem.direction
-                # rise up to new ground level
-                lem.y -= height
-                found = True
-
-            height += 1
-
-        # turn the lemming around if the ground in front
-        # is too high to climb
-        if not found:
+        height = lem.floorHeightInFront()
+        if height <= lem.climbheight:
+            lem.x += lem.direction
+            # rise up to new ground level
+            lem.y -= height
+        else:
             lem.direction *= -1
-        
+
         if lem.isNear(lem.game.level.end_position, 15):
             lem.game.points += 1
             lem.dead = True
