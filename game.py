@@ -15,6 +15,7 @@ class Game:
         self.paused = False
         self.hovered = None
         self.debug = True
+        self.scoreFont = pygame.font.SysFont(None, 40)
         Assets.load()
     
     @property
@@ -69,8 +70,7 @@ class Game:
         if self.hovered:
             pygame.draw.circle(self.screen, (0,255,0), (self.hovered.x, self.hovered.y - self.hovered.rect.height // 4), 25, 3)
         # Desenhar o score
-        font = pygame.font.SysFont(None, 40)
-        text = font.render(f"Pontos: {self.points} / {self.level.numLemmings}", True, (255,255,255))
+        text = self.scoreFont.render(f"Pontos: {self.points} / {self.level.numLemmingsToSave}", True, (255,255,255))
         self.screen.blit(text, (10,10))
     
     def get_lemming_near(self, pos, radius=80):

@@ -3,6 +3,7 @@ import pygame
 class Level:
     def __init__(self, image):
         self.numLemmings = 10
+        self.numLemmingsToSave = 8
         self.startPosition = (100,100)
         self.endPosition = (580,710)
         self.backgroundColour = (114,114,201,255)
