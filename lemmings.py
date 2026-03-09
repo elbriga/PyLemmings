@@ -4,6 +4,7 @@ from time import sleep
 from PIL import Image
 
 from assets import Assets
+from entity import Entity
 
 # screen size
 HEIGHT=800
@@ -63,21 +64,16 @@ class Game:
         text = font.render(f"Pontos: {self.points} / {len(self.lemmings)}", True, (255,255,255))
         screen.blit(text, (10,10))
 
-class Lemming():
+class Lemming(Entity):
     def __init__(self, game, **kwargs):
-        self.game = game
-        self.selected = False
+        Entity.__init__(self, game, 40, 80)
+        self.frames = Assets.animations["lemming_walk"]
         self.x = game.level.start_position[0]
         self.y = game.level.start_position[1]
+        self.selected = False
         self.direction = 1
         self.climbheight = 4
         self.falling = 0
-        self.dying = False
-        self.width = 40
-        self.height = 80
-        self.frames = Assets.animations["lemming_walk"]
-        self.frame = 0
-        self.anim_timer = 0
 
     def isNear(self, pos, range):
         return self.x > pos[0] - range and self.x < pos[0] + range and self.y > pos[1] - range and self.y < pos[1] + range
@@ -95,7 +91,7 @@ class Lemming():
         if self.anim_timer > 3:
             self.anim_timer = 0
             self.frame = (self.frame + 1) % len(self.frames)
-            if self.dying and self.frame == 0:
+            if self.dead and self.frame == 0:
                 self.game.lemmings.remove(self)
                 return
         
@@ -111,10 +107,10 @@ class Lemming():
         else:
             if self.falling > 200:
                 # Die!
-                if not self.dying:
-                    self.frame = 0
+                if not self.dead:
                     self.frames = Assets.animations["lemming_die"]
-                    self.dying = True
+                    self.frame = 0
+                    self.dead = True
             else:
                 self.frames = Assets.animations["lemming_walk"]
                 self.falling = 0
