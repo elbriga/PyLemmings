@@ -16,6 +16,10 @@ class Game:
         self.debug = True
         Assets.load()
     
+    @property
+    def lemmings(self):
+        return [e for e in self.entities if isinstance(e, Lemming) and not e.dead]
+    
     def update(self):
         mx, my = pygame.mouse.get_pos()
         self.hovered = self.get_lemming_near((mx, my))
@@ -73,12 +77,7 @@ class Game:
         mx, my = pos
         best_dist = radius * radius
 
-        for lem in self.entities:
-            if not isinstance(lem, Lemming):
-                continue
-            if lem.dead:
-                continue
-
+        for lem in self.lemmings:
             dx = lem.x - mx
             dy = lem.y - my
 
@@ -90,11 +89,9 @@ class Game:
         return best
 
     def get_blocker(self, rect):
-        for e in self.entities:
-            if isinstance(e, Lemming) and e.stateName == "Parado":
-                block_area = e.rect.inflate(20, 10)
-
+        for lem in self.lemmings:
+            if lem.stateName == "Parado":
+                block_area = lem.rect.inflate(20, 10)
                 if rect.colliderect(block_area):
-                    return e
-
+                    return lem
         return None
