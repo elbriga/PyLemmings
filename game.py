@@ -7,23 +7,21 @@ class Game:
         self.screen = screen
         self.entities = []
         self.points = 0
+        self.tot_lemmings = 0
         self.add_timer = 0
         self.add_interval = 10
-        self.add_done = False
         self.level = level
         Assets.load()
     
     def update(self):
-        if not self.add_done:
-            if len(self.entities) < self.level.max_lemmings:
-                # increment the timer and create a new
-                # lemming if the interval has passed
-                self.add_timer += 0.1
-                if self.add_timer > self.add_interval:
-                    self.add_timer = 0
-                    self.entities.append(Lemming(self))
-            else:
-                self.add_done = True
+        if self.tot_lemmings < self.level.num_lemmings:
+            # increment the timer and create a new
+            # lemming if the interval has passed
+            self.add_timer += 0.1
+            if self.add_timer > self.add_interval:
+                self.add_timer = 0
+                self.tot_lemmings += 1
+                self.entities.append(Lemming(self))
 
         # update each entity's in the level
         for e in self.entities[:]:
