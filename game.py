@@ -16,7 +16,7 @@ class Game:
         self.hovered = None
         self.debug = True
         self.scoreFont = pygame.font.SysFont(None, 40)
-        self.blockerShape = pygame.mask.Mask((40, 40), True)
+        self.blockerShape = pygame.mask.Mask((40, 44), True)
         Assets.load()
     
     @property

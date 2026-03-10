@@ -24,7 +24,7 @@ class Lemming(Entity):
             pygame.draw.circle(screen, (255, 0, 0), (self.rect.right, self.rect.bottom + 1), 5)
             pygame.draw.circle(screen, (255, 255, 0), (self.rect.left, self.rect.bottom + 1), 5)
             if self.stateName == "Parado":
-                blockArea = pygame.Rect(self.rect.x, self.rect.centery, 40, 40)
+                blockArea = pygame.Rect(self.rect.x, self.rect.centery, 40, 44)
                 pygame.draw.rect(screen, (255,0,0), blockArea, 1)
 
     def update(self):
