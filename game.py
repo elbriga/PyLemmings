@@ -16,6 +16,7 @@ class Game:
         self.hovered = None
         self.debug = True
         self.scoreFont = pygame.font.SysFont(None, 40)
+        self.blockerShape = pygame.mask.Mask((40, 40), True)
         Assets.load()
     
     @property
@@ -77,22 +78,17 @@ class Game:
         best = None
         mx, my = pos
         best_dist = radius * radius
-
         for lem in self.lemmings:
             dx = lem.x - mx
             dy = lem.y - my
-
             dist = dx * dx + dy * dy
             if dist < best_dist:
                 best = lem
                 best_dist = dist
-
         return best
-
-    def get_blocker(self, rect):
+    
+    def buildBlockerMask(self):
+        self.level.blockerMask.clear()
         for lem in self.lemmings:
             if lem.stateName == "Parado":
-                block_area = lem.rect.inflate(20, 10)
-                if rect.colliderect(block_area):
-                    return lem
-        return None
+                self.level.blockerMask.draw(self.blockerShape, (lem.rect.x, lem.rect.centery))

@@ -23,13 +23,6 @@ class Walker(LemmingState):
             lem.set_state("Caindo")
             return
 
-        nextRect = lem.rect.move(lem.direction, 0)
-        blocker = lem.game.get_blocker(nextRect)
-
-        if blocker:
-            lem.direction *= -1
-            return
-
         height = lem.floor_height_in_front()
         if height > lem.climbHeight:
             lem.direction *= -1

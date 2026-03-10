@@ -24,7 +24,7 @@ class Lemming(Entity):
             pygame.draw.circle(screen, (255, 0, 0), (self.rect.right, self.rect.bottom + 1), 5)
             pygame.draw.circle(screen, (255, 255, 0), (self.rect.left, self.rect.bottom + 1), 5)
             if self.stateName == "Parado":
-                blockArea = self.rect.inflate(20, 10)
+                blockArea = pygame.Rect(self.rect.x, self.rect.centery, 40, 40)
                 pygame.draw.rect(screen, (255,0,0), blockArea, 1)
 
     def update(self):
@@ -35,22 +35,17 @@ class Lemming(Entity):
         return self.rect.colliderect(area)
     
     def is_on_floor(self):
-        bottomLeft = self.game.level.is_solid((self.rect.left, self.rect.bottom + 1))
-        if not bottomLeft:
-            bottomRight = self.game.level.is_solid((self.rect.right, self.rect.bottom + 1))
-            if not bottomRight:
-                return False
-        return True
-    
+        return (
+            self.game.level.is_solid((self.rect.left, self.rect.bottom + 1)) or
+            self.game.level.is_solid((self.rect.right, self.rect.bottom + 1))
+        )
+
     def floor_height_in_front(self):
         height = 0
         # Achar a altura do chao na frente do lemming, ate a altura que ele consegue subir
         while height <= self.climbHeight:
             # O pixel 'na frente' do lemming depende da direcao dele
-            if self.direction == 1:
-                positionInFront = (self.rect.right, self.rect.bottom - height)
-            else:
-                positionInFront = (self.rect.left, self.rect.bottom - height)
+            positionInFront = (self.rect.right if self.direction == 1 else self.rect.left, self.rect.bottom - height)
             if not self.game.level.is_solid(positionInFront):
                 break
 
@@ -61,3 +56,12 @@ class Lemming(Entity):
     def set_state(self, stateName):
         self.stateName = stateName
         self.state = LemmingState.states[stateName](self)
+    
+    def toggleBlock(self):
+        block = (self.stateName == "Andando")
+        if block:
+            self.set_state("Parado")
+            self.set_animation("stop")
+        else:
+            self.set_state("Andando")
+        self.game.buildBlockerMask()
