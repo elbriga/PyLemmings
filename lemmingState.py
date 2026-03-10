@@ -69,6 +69,15 @@ class Floater(LemmingState):
 
         lem.rect.y += 1
 
+class Digger(LemmingState):
+    def update(self):
+        lem = self.lem
+        lem.stateTimer += 1
+        if lem.stateTimer > 6:
+            lem.stateTimer = 0
+            # Dig
+            
+
 class Blocker(LemmingState):
     def update(self):
         pass
@@ -77,5 +86,6 @@ LemmingState.states = {
     "Parado": Blocker,
     "Andando": Walker,
     "Caindo": Faller,
-    "Flutuando": Floater
+    "Flutuando": Floater,
+    "Cavando": Digger,
 }

@@ -6,6 +6,7 @@ class Lemming(Entity):
     def __init__(self, game, **kwargs):
         Entity.__init__(self, game, 40, 80)
         self.stateName = ""
+        self.stateTimer = 0 # Timer para os estados, usado em: Cavando,
         self.direction = 1
         self.climbHeight = 4
         self.falling = 0
@@ -55,19 +56,26 @@ class Lemming(Entity):
 
     def set_state(self, stateName):
         self.stateName = stateName
+        self.stateTimer = 0
         self.state = LemmingState.states[stateName](self)
     
     def toggleBlock(self):
-        block = (self.stateName == "Andando")
-        if block:
+        if (self.stateName == "Andando"):
             self.set_state("Parado")
             self.set_animation("stop")
         else:
             self.set_state("Andando")
         self.game.buildBlockerMask()
 
-    def explode(self):
+    def burn(self):
         self.set_state("Parado")
-        self.set_animation("boom")
+        self.set_animation("burn")
         self.frame = 0
         self.dead = True
+
+    def dig(self):
+        # Se abaixar!
+        self.rect.y += 10
+        self.set_state("Cavando")
+        self.set_animation("dig")
+        self.frame = 0
