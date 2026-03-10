@@ -65,3 +65,9 @@ class Lemming(Entity):
         else:
             self.set_state("Andando")
         self.game.buildBlockerMask()
+
+    def explode(self):
+        self.set_state("Parado")
+        self.set_animation("boom")
+        self.frame = 0
+        self.dead = True

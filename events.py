@@ -22,5 +22,8 @@ class Events:
 
                 if event.button == 2:  # botao meio
                     lem.toggleBlock()
+
+                if event.button == 3:  # botao direito
+                    lem.explode()
         
         return True

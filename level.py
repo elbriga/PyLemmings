@@ -37,6 +37,7 @@ class LevelConfig:
         self.load(number)
 
     def load(self, number):
+        # Carregar os dados do nivel do JSON
         with open(f"levels/level{number}.json") as f:
             conf = json.load(f)
             for key, value in conf.items():
