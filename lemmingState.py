@@ -73,10 +73,15 @@ class Digger(LemmingState):
     def update(self):
         lem = self.lem
         lem.stateTimer += 1
-        if lem.stateTimer > 6:
+        if lem.stateTimer > 20:
             lem.stateTimer = 0
             # Dig
-            
+            lem.game.level.dig((lem.rect.x - 2, lem.rect.bottom - 10))
+            lem.rect.y += 3
+            if not lem.is_on_floor():
+                lem.game.level.dig((lem.rect.x - 2, lem.rect.bottom - 10))
+                lem.set_state("Caindo")
+                lem.set_animation("fall")
 
 class Blocker(LemmingState):
     def update(self):

@@ -4,23 +4,42 @@ import json
 class Level:
     def __init__(self, number):
         self.config = LevelConfig(number)
-        self.surface = pygame.image.load(f'levels/level{number}.png').convert()
-        self.surface.set_colorkey(self.config.backgroundColour)
-        self.groundMask = pygame.mask.from_surface(self.surface)
-        self.surface.set_colorkey(None)
-        w, h = self.groundMask.get_size()
+        self.terrain = pygame.image.load(f'levels/level{number}.png').convert()
+        self.terrain.set_colorkey(self.config.backgroundColour)
+        self.terrainMask = pygame.mask.from_surface(self.terrain)
+        self.terrain.set_colorkey(None)
+        w, h = self.terrainMask.get_size()
         self.blockerMask = pygame.mask.Mask((w, h), False)
+        self.blockerShape = pygame.mask.Mask((40, 44), True)
+        self.digWidth = 44
+        self.digHeight = 10
+        self.digShape = pygame.mask.Mask((self.digWidth, self.digHeight), True) # TODO : meio-circulo
         
     # Verifica se um pixel eh solido no mapa ou nos Blocker's
     def is_solid(self, pos):
         posInt = (int(pos[0]), int(pos[1]))
         try:
             return (
-                self.groundMask.get_at(posInt) or
+                self.terrainMask.get_at(posInt) or
                 self.blockerMask.get_at(posInt)
             )
         except IndexError:
             return False
+    
+    # Reconstroi a mascara dos lemmings Blockers
+    def buildBlockerMask(self, lemmings):
+        self.blockerMask.clear()
+        for lem in lemmings:
+            if lem.stateName == "Parado":
+                self.blockerMask.draw(self.blockerShape, (lem.rect.x, lem.rect.centery))
+    
+    # Corta um pedaco do terreno
+    def dig(self, pos):
+        posInt = (int(pos[0]), int(pos[1]))
+        digRect = pygame.Rect(int(pos[0]), int(pos[1]), self.digWidth, self.digHeight)
+        pygame.draw.rect(self.terrain, self.config.backgroundColour, digRect)
+        self.terrainMask.erase(self.digShape, posInt)
+
 
 class LevelConfig:
     def __init__(self, number):

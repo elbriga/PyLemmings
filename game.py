@@ -2,6 +2,7 @@ import pygame
 from assets import Assets
 from lemming import Lemming
 from level import Level
+
 class Game:
     def __init__(self, screen):
         self.screen = screen
@@ -13,9 +14,8 @@ class Game:
         self.addTimer = 0
         self.paused = False
         self.hovered = None
-        self.debug = False
+        self.debug = True
         self.scoreFont = pygame.font.SysFont(None, 40)
-        self.blockerShape = pygame.mask.Mask((40, 44), True)
         Assets.load()
     
     @property
@@ -62,7 +62,7 @@ class Game:
 
     def draw(self):
         # Desenhar o level
-        self.screen.blit(self.level.surface,(0,0))
+        self.screen.blit(self.level.terrain, (0, 0))
         # Desenhar as entidades
         for e in self.entities:
             e.draw()
@@ -86,8 +86,4 @@ class Game:
                 best_dist = dist
         return best
     
-    def buildBlockerMask(self):
-        self.level.blockerMask.clear()
-        for lem in self.lemmings:
-            if lem.stateName == "Parado":
-                self.level.blockerMask.draw(self.blockerShape, (lem.rect.x, lem.rect.centery))
+    

@@ -65,7 +65,7 @@ class Lemming(Entity):
             self.set_animation("stop")
         else:
             self.set_state("Andando")
-        self.game.buildBlockerMask()
+        self.game.level.buildBlockerMask(self.game.lemmings)
 
     def burn(self):
         self.set_state("Parado")
