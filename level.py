@@ -1,16 +1,5 @@
 import pygame
-
-class LevelConfig:
-    def __init__(self, number):
-        # Defaults
-        self.number = number
-        self.numLemmings = 10
-        self.numLemmingsToSave = 8
-        self.startPosition = (100, 100)
-        self.endPosition = (580, 710)
-        self.backgroundColour = (114, 114, 201, 255)
-        self.releaseRate = 10
-        self.timeLimit = 300
+import json
 
 class Level:
     def __init__(self, number):
@@ -32,3 +21,32 @@ class Level:
             )
         except IndexError:
             return False
+
+class LevelConfig:
+    def __init__(self, number):
+        # Defaults
+        self.number = number
+        self.skills = {}
+        self.numLemmings = 10
+        self.numLemmingsToSave = 8
+        self.startPosition = (100, 100)
+        self.endPosition = (580, 710)
+        self.backgroundColour = (114, 114, 201, 255)
+        self.releaseRate = 10
+        self.timeLimit = 300
+        self.load(number)
+
+    def load(self, number):
+        with open(f"levels/level{number}.json") as f:
+            conf = json.load(f)
+            for key, value in conf.items():
+                if key == "objects":
+                    for o in conf["objects"]:
+                        if o['type'] == 'entrance':
+                            self.startPosition = (o['x'], o['y'])
+                        if o['type'] == 'exit':
+                            self.endPosition = (o['x'], o['y'])
+                elif key == "backgroundColour":
+                    self.backgroundColour = (value[0], value[1], value[2], 255)
+                elif hasattr(self, key):
+                    setattr(self, key, value)

@@ -5,12 +5,20 @@
   "timeLimit": 300,
   "backgroundColour": [114, 114, 201],
 
+  "music": "level1",
+  "background": "cave",
+
   "skills": {
     "umbrella": 8
   },
 
   "objects": [
     {"type": "entrance", "x": 100, "y": 100},
-    {"type": "exit", "x": 580, "y": 710}
+    {"type": "exit", "x": 580, "y": 710},
+
+    {"type":"water","x":450,"y":250},
+    {"type":"steel","x":300,"y":180,"w":64,"h":32},
+    {"type":"trap","x":600,"y":210},
+    {"type":"decoration","sprite":"tree","x":200,"y":150}
   ]
 }
