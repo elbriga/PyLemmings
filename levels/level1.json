@@ -1,0 +1,16 @@
+{
+  "numLemmings": 10,
+  "numLemmingsToSave": 5,
+  "releaseRate": 10,
+  "timeLimit": 300,
+  "backgroundColour": [114, 114, 201],
+
+  "skills": {
+    "umbrella": 8
+  },
+
+  "objects": [
+    {"type": "entrance", "x": 100, "y": 100},
+    {"type": "exit", "x": 580, "y": 710}
+  ]
+}

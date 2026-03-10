@@ -3,18 +3,17 @@ from assets import Assets
 from lemming import Lemming
 from level import Level
 class Game:
-    def __init__(self, screen, levelName):
+    def __init__(self, screen):
         self.screen = screen
         self.entities = []
-        self.level = Level(levelName)
+        self.level = Level(1)
         self.points = 0
         self.totLemmings = 0
         self.minHeightToDie = 200
         self.addTimer = 0
-        self.addInterval = 10
         self.paused = False
         self.hovered = None
-        self.debug = True
+        self.debug = False
         self.scoreFont = pygame.font.SysFont(None, 40)
         self.blockerShape = pygame.mask.Mask((40, 44), True)
         Assets.load()
@@ -30,10 +29,10 @@ class Game:
         if self.paused:
             return
         
-        if self.totLemmings < self.level.numLemmings:
+        if self.totLemmings < self.level.config.numLemmings:
             self.addTimer += 0.1
             # Add lemming se o intervalo passou
-            if self.addTimer > self.addInterval:
+            if self.addTimer > self.level.config.releaseRate:
                 self.addTimer = 0
                 self.totLemmings += 1
                 self.entities.append(Lemming(self))
@@ -44,7 +43,7 @@ class Game:
                 e.update()
                 # Checar pela saida
                 if isinstance(e, Lemming):
-                    if e.is_near(self.level.endPosition, 15):
+                    if e.is_near(self.level.config.endPosition, 15):
                         self.points += 1
                         e.dead = True
                         e.frame = -1 # Remover agora
@@ -71,7 +70,7 @@ class Game:
         if self.hovered:
             pygame.draw.circle(self.screen, (0,255,0), (self.hovered.x, self.hovered.y - self.hovered.rect.height // 4), 25, 3)
         # Desenhar o score
-        text = self.scoreFont.render(f"Pontos: {self.points} / {self.level.numLemmingsToSave}", True, (255,255,255))
+        text = self.scoreFont.render(f"Pontos: {self.points} / {self.level.config.numLemmingsToSave}", True, (255,255,255))
         self.screen.blit(text, (10,10))
     
     def get_lemming_near(self, pos, radius=80):

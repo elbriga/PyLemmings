@@ -1,15 +1,24 @@
 import pygame
 
-class Level:
-    def __init__(self, image):
+class LevelConfig:
+    def __init__(self, number):
+        # Defaults
+        self.number = number
         self.numLemmings = 10
         self.numLemmingsToSave = 8
         self.startPosition = (100, 100)
         self.endPosition = (580, 710)
         self.backgroundColour = (114, 114, 201, 255)
-        self.surface = pygame.image.load(f'images/{image}.png').convert()
-        self.surface.set_colorkey(self.backgroundColour)
+        self.releaseRate = 10
+        self.timeLimit = 300
+
+class Level:
+    def __init__(self, number):
+        self.config = LevelConfig(number)
+        self.surface = pygame.image.load(f'levels/level{number}.png').convert()
+        self.surface.set_colorkey(self.config.backgroundColour)
         self.groundMask = pygame.mask.from_surface(self.surface)
+        self.surface.set_colorkey(None)
         w, h = self.groundMask.get_size()
         self.blockerMask = pygame.mask.Mask((w, h), False)
         
