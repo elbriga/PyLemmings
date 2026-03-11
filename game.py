@@ -14,7 +14,7 @@ class Game:
         self.addTimer = 0
         self.paused = False
         self.hovered = None
-        self.debug = True
+        self.debug = False
         self.scoreFont = pygame.font.SysFont(None, 40)
         Assets.load()
     
@@ -52,12 +52,14 @@ class Game:
             if e.animTimer > 3:
                 e.animTimer = 0
                 e.frame = (e.frame + 1) % len(e.frames)
-                if e.frame == 0:
-                    if e.dead:
-                        self.entities.remove(e)
-                    elif e.animNext != "":
+                if e.frame == 0 and isinstance(e, Lemming):
+                    if e.animNext != "":
                         e.set_animation(e.animNext)
+                        if e.animNext == "explosion":
+                            e.rect.x -= 12 # HACK feio! Explosao é maior
                         e.animNext = ""
+                    elif e.dead:
+                        self.entities.remove(e)
 
     def draw(self):
         # Desenhar o level

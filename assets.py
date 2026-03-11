@@ -34,3 +34,14 @@ class Assets:
         cls.animations["lemming_dig"] = cls.slice_sprites(sheet, 16, 20, 247, 16, 10, 14)
         cls.animations["lemming_boom"] = cls.slice_sprites(sheet, 16, 19, 128, 16, 10, 10)
         cls.animations["lemming_gone"] = cls.slice_sprites(sheet, 8, 18, 182, 16, 10, 14)
+
+        # https://opengameart.org/content/explosion
+        sheet = pygame.image.load("images/explosion.png").convert_alpha()
+        cls.animations["lemming_explosion"] = []
+        explosionSize = 64
+        for y in range(0, 4 * explosionSize, explosionSize):
+            for x in range(0, 4 * explosionSize, explosionSize):
+                sprite = pygame.Surface((explosionSize, 100), pygame.SRCALPHA)
+                sprite.blit(sheet, (0, 100 - explosionSize), (x, y, explosionSize, explosionSize))
+                #sprite.set_colorkey((0, 0, 0))
+                cls.animations["lemming_explosion"].append(sprite.convert_alpha())

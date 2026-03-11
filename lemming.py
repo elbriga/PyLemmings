@@ -59,9 +59,9 @@ class Lemming(Entity):
         self.stateTimer = 0
         self.state = LemmingState.states[stateName](self)
 
-    def die(self, anim):
+    def die(self, anim, nextAnim=""):
         self.set_state("Parado")
-        self.set_animation(anim)
+        self.set_animation(anim, nextAnim)
         self.frame = 0
         self.dead = True
     
@@ -84,4 +84,4 @@ class Lemming(Entity):
         self.die("burn")
 
     def explode(self):
-        self.die("boom")
+        self.die("boom", "explosion")
