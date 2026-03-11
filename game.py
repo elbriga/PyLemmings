@@ -45,8 +45,7 @@ class Game:
                 if isinstance(e, Lemming):
                     if e.is_near(self.level.config.endPosition, 15):
                         self.points += 1
-                        e.dead = True
-                        e.frame = -1 # Remover agora
+                        e.die("gone")
 
             # Animacao
             e.animTimer += 1

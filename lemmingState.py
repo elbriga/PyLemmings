@@ -36,11 +36,9 @@ class Walker(LemmingState):
 class Faller(LemmingState):
     def update(self):
         lem = self.lem
-
         if lem.is_on_floor():
             lem.set_state("Andando")
             return
-
 
         if lem.falling > 100:
             delta = 4
@@ -48,7 +46,6 @@ class Faller(LemmingState):
             delta = 3
         else:
             delta = 2
-
         lem.rect.y += delta
         lem.falling += delta
 
@@ -62,7 +59,6 @@ class Faller(LemmingState):
 class Floater(LemmingState):
     def update(self):
         lem = self.lem
-
         if lem.is_on_floor():
             lem.set_state("Andando")
             return

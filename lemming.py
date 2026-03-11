@@ -58,6 +58,12 @@ class Lemming(Entity):
         self.stateName = stateName
         self.stateTimer = 0
         self.state = LemmingState.states[stateName](self)
+
+    def die(self, anim):
+        self.set_state("Parado")
+        self.set_animation(anim)
+        self.frame = 0
+        self.dead = True
     
     def toggleBlock(self):
         if (self.stateName == "Andando"):
@@ -67,15 +73,15 @@ class Lemming(Entity):
             self.set_state("Andando")
         self.game.level.buildBlockerMask(self.game.lemmings)
 
-    def burn(self):
-        self.set_state("Parado")
-        self.set_animation("burn")
-        self.frame = 0
-        self.dead = True
-
     def dig(self):
         # Se abaixar!
         self.rect.y += 10
         self.set_state("Cavando")
         self.set_animation("dig")
         self.frame = 0
+
+    def burn(self):
+        self.die("burn")
+
+    def explode(self):
+        self.die("boom")
