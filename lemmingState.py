@@ -97,6 +97,9 @@ class Builder(LemmingState):
         lem.rect.x += (4 * lem.direction)
         lem.rect.y -= 4
         lem.stateTimer += 1 # Contar os degraus
+
+class Dying(LemmingState):
+    pass
         
 # TODO relacionar com o nome da animacao e usar no set_state
 LemmingState.states = {
@@ -107,4 +110,5 @@ LemmingState.states = {
     "Cavando":     (Digger,   "dig",   ""),
     "Explodindo":  (Exploder, "boom",  "explosion"),
     "Construindo": (Builder,  "build", ""),
+    "Morrendo":    (Dying,    "",      ""),  # Usado no lemming.die()
 }

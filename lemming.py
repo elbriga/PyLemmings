@@ -63,7 +63,7 @@ class Lemming(Entity):
 
         return height
 
-    def set_state(self, stateName):
+    def set_state(self, stateName, die=False):
         self.stateName = stateName
         self.stateTimer = 0
 
@@ -74,11 +74,12 @@ class Lemming(Entity):
         if stateAnim != "":
             stateAnimN = LemmingState.states[stateName][2]
             self.set_animation(stateAnim, stateAnimN)
+        if die:
+            self.dead = True
 
-    def die(self, anim, nextAnim="", state="Parado"):
-        self.set_state(state)
+    def die(self, anim, nextAnim=""):
+        self.set_state("Morrendo", True)
         self.set_animation(anim, nextAnim)
-        self.dead = True
     
     def toggleBlock(self):
         novoEstado = "Parado" if (self.stateName == "Andando") else "Andando"
@@ -97,4 +98,4 @@ class Lemming(Entity):
         self.die("burn")
 
     def explode(self):
-        self.set_state("Explodindo")
+        self.set_state("Explodindo", True)
