@@ -13,6 +13,7 @@ class Game:
         self.minHeightToDie = 200
         self.addTimer = 0
         self.paused = False
+        self.showMask = False
         self.hovered = None
         self.debug = False
         self.scoreFont = pygame.font.SysFont(None, 40)
@@ -62,7 +63,19 @@ class Game:
 
     def draw(self):
         # Desenhar o level
-        self.screen.blit(self.level.terrain, (0, 0))
+        if not self.showMask:            
+            self.screen.blit(self.level.terrain, (0, 0))
+        else:
+            mask_surface = self.level.terrainMask.to_surface(
+                setcolor=(255,255,255,255),
+                unsetcolor=(0,0,0,0)
+            )
+            self.screen.blit(mask_surface, (0, 0))
+            mask_surface = self.level.blockerMask.to_surface(
+                setcolor=(255,0,0,255),
+                unsetcolor=(0,0,0,0)
+            )
+            self.screen.blit(mask_surface, (0, 0))
         # Desenhar as entidades
         for e in self.entities:
             e.draw()
@@ -85,5 +98,9 @@ class Game:
                 best = lem
                 best_dist = dist
         return best
-    
-    
+
+    def togglePaused(self):
+        self.paused = not self.paused
+
+    def toggleShowMask(self):
+        self.showMask = not self.showMask

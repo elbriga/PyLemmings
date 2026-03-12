@@ -10,9 +10,12 @@ class Events:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
                 return False
-            if event.key == pygame.K_p:
-                game.paused = not game.paused
             
+            if event.key == pygame.K_p:
+                game.togglePaused()
+
+            if event.key == pygame.K_m:
+                game.toggleShowMask()
             
         if event.type == pygame.MOUSEBUTTONDOWN:
             if game.hovered:
