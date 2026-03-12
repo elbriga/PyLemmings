@@ -94,10 +94,16 @@ class Exploder(LemmingState):
 class Builder(LemmingState):
     def on_cycle_anim(self):
         lem = self.lem
+        if lem.stateTimer >= lem.stepCount:
+            lem.set_state("Andando")
+            return
+        elif lem.stateTimer >= lem.stepCount - 1:
+            lem.set_animation("done")
         # Novo degrau
         lem.game.level.add_step(lem.pos, lem.direction)
         lem.rect.x += (4 * lem.direction)
         lem.rect.y -= 4
+        lem.stateTimer += 1 # Contar os degraus
         
 # TODO relacionar com o nome da animacao e usar no set_state
 LemmingState.states = {

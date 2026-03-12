@@ -22,7 +22,7 @@ class Level:
         # Degraus
         self.stepWidth = 16
         self.stepHeight = 4
-        self.stepShape = pygame.mask.Mask((self.stepWidth, self.stepHeight), True)
+        self.stepShape = pygame.mask.Mask((self.stepWidth, self.stepHeight + 2), True)
         
     # Verifica se um pixel eh solido no mapa ou nos Blocker's
     def is_solid(self, pos):
