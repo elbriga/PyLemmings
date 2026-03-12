@@ -74,9 +74,11 @@ class Lemming(Entity):
         return height
 
     def set_state(self, stateName):
+        die = stateName == "Exploder" or stateName == "Dying"
+        block = stateName == "Blocker" or self.stateName == "Blocker"
+
         self.stateName = stateName
         self.stateTimer = 0
-        die = stateName == "Exploder" or stateName == "Dying"
 
         stateClass = LemmingState.states[stateName][0]
         self.state = stateClass(self)
@@ -85,20 +87,15 @@ class Lemming(Entity):
         if stateAnim != "":
             stateAnimN = LemmingState.states[stateName][2]
             self.set_animation(stateAnim, stateAnimN)
-        if die:
-            self.dead = True
-            # Remover da mascara de block
+        if block or die:
+            # Atualizar mascara de block
             self.game.level.build_blocker_mask(self.game.lemmings)
+            if die:
+                self.dead = True
 
     def die(self, anim, nextAnim=""):
         self.set_state("Dying")
         self.set_animation(anim, nextAnim)
-    
-    def toggleBlock(self):
-        novoEstado = "Blocker" if (self.stateName == "Walker") else "Walker"
-        self.set_state(novoEstado)
-        # Adicionar na mascara de Block
-        self.game.level.build_blocker_mask(self.game.lemmings)
 
     def dig(self):
         # Se abaixar!
