@@ -39,7 +39,7 @@ class Level:
     def build_blocker_mask(self, lemmings):
         self.blockerMask.clear()
         for lem in lemmings:
-            if lem.stateName == "Parado" and not lem.dead:
+            if lem.stateName == "Blocker" and not lem.dead:
                 self.blockerMask.draw(self.blockerShape, (lem.rect.x, lem.rect.centery))
     
     # Corta um pedaco do terreno
@@ -96,7 +96,7 @@ class LevelConfig:
             for key, value in conf.items():
                 if key == "skills":
                     self.loadSkills(value)
-                if key == "objects":
+                elif key == "objects":
                     for o in conf["objects"]:
                         if o['type'] == 'entrance':
                             self.startPosition = (o['x'], o['y'])
@@ -111,4 +111,5 @@ class LevelConfig:
         for key, value in skillsJson.items():
             if key in self.skills:
                 self.skills[key] += value
-        self.skills = {k: v for k, v in self.skills.items() if v > 0} # Remover as skills com 0
+        # Remover as skills com valor 0
+        self.skills = {k: v for k, v in self.skills.items() if v > 0}
