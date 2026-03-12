@@ -54,10 +54,8 @@ class Game:
                 e.frame = (e.frame + 1) % len(e.frames)
                 if e.frame == 0 and isinstance(e, Lemming):
                     if e.animNext != "":
+                        e.on_change_anim()
                         e.set_animation(e.animNext)
-                        if e.animNext == "explosion":
-                            e.rect.x -= 12 # HACK feio! Explosao é maior
-                        e.animNext = ""
                     elif e.dead:
                         self.entities.remove(e)
 

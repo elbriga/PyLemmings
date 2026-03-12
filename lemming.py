@@ -8,7 +8,7 @@ class Lemming(Entity):
         self.stateName = ""
         self.stateTimer = 0 # Timer para os estados, usado em: Cavando,
         self.direction = 1
-        self.climbHeight = 4
+        self.climbHeight = 5
         self.falling = 0
         self.hasUmbrella = False
         self.set_state("Andando")
@@ -20,7 +20,7 @@ class Lemming(Entity):
             frame = pygame.transform.flip(frame, True, False)
         screen.blit(frame, self.rect)
         if self.hasUmbrella and self.stateName == "Andando":
-            pygame.draw.circle(screen, (255, 255, 0), (self.x, self.y), 5)
+            pygame.draw.circle(screen, (255, 255, 0), self.pos, 5)
         if self.game.debug:
             pygame.draw.circle(screen, (255, 0, 0), (self.rect.right, self.rect.bottom + 1), 5)
             pygame.draw.circle(screen, (255, 255, 0), (self.rect.left, self.rect.bottom + 1), 5)
@@ -30,6 +30,9 @@ class Lemming(Entity):
 
     def update(self):
         self.state.update()
+
+    def on_change_anim(self):
+        self.state.on_change_anim()
 
     def is_near(self, pos, distance):
         area = pygame.Rect(pos[0] - distance, pos[1] - distance, distance * 2, distance * 2)
@@ -59,8 +62,8 @@ class Lemming(Entity):
         self.stateTimer = 0
         self.state = LemmingState.states[stateName](self)
 
-    def die(self, anim, nextAnim=""):
-        self.set_state("Parado")
+    def die(self, anim, nextAnim="", state="Parado"):
+        self.set_state(state)
         self.set_animation(anim, nextAnim)
         self.frame = 0
         self.dead = True
@@ -84,4 +87,4 @@ class Lemming(Entity):
         self.die("burn")
 
     def explode(self):
-        self.die("boom", "explosion")
+        self.die("boom", "explosion", "Explodindo")

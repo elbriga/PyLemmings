@@ -14,6 +14,11 @@ class Level:
         self.digWidth = 44
         self.digHeight = 10
         self.digShape = pygame.mask.Mask((self.digWidth, self.digHeight), True) # TODO : meio-circulo
+        # criar máscara circular
+        self.explosionRadius = 40
+        surf = pygame.Surface((self.explosionRadius*2, self.explosionRadius*2), pygame.SRCALPHA)
+        pygame.draw.circle(surf, (255,255,255), (self.explosionRadius, self.explosionRadius), self.explosionRadius)
+        self.explosionShape = pygame.mask.from_surface(surf)
         
     # Verifica se um pixel eh solido no mapa ou nos Blocker's
     def is_solid(self, pos):
@@ -39,7 +44,15 @@ class Level:
         digRect = pygame.Rect(int(pos[0]), int(pos[1]), self.digWidth, self.digHeight)
         pygame.draw.rect(self.terrain, self.config.backgroundColour, digRect)
         self.terrainMask.erase(self.digShape, posInt)
-
+    
+    def digHole(self, pos):
+        x = int(pos[0])
+        y = int(pos[1])
+        # apagar visualmente no terreno
+        pygame.draw.circle(self.terrain, self.config.backgroundColour, (x, y), self.explosionRadius)
+        # remover da máscara do terreno
+        self.terrainMask.erase(self.explosionShape, (x - self.explosionRadius, y - self.explosionRadius))
+        
 
 class LevelConfig:
     def __init__(self, number):

@@ -20,6 +20,10 @@ class Entity:
     def y(self):
         return self.rect.bottom
 
+    @property
+    def pos(self):
+        return (self.x, self.y)
+
     def update(self):
         pass
 
@@ -29,3 +33,7 @@ class Entity:
     def set_animation(self, name, next=""):
         self.frames = Assets.animations[f"lemming_{name}"]
         self.animNext = next
+    
+    # Invocado quando a animacao muda no mesmo estado (com animNext)
+    def onChangeAnim(self):
+        pass

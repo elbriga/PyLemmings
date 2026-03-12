@@ -1,8 +1,9 @@
 class LemmingState:
     def __init__(self, lemming):
         self.lem = lemming
-
     def update(self):
+        pass
+    def on_change_anim(self):
         pass
 
 class Walker(LemmingState):
@@ -83,10 +84,17 @@ class Blocker(LemmingState):
     def update(self):
         pass
 
+class Exploder(LemmingState):
+    def on_change_anim(self):
+        lem = self.lem
+        lem.game.level.digHole(lem.pos)
+        lem.rect.x -= 12 # HACK feio! Explosao é maior
+
 LemmingState.states = {
     "Parado": Blocker,
     "Andando": Walker,
     "Caindo": Faller,
     "Flutuando": Floater,
     "Cavando": Digger,
+    "Explodindo": Exploder,
 }
