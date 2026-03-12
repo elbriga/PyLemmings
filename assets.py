@@ -23,17 +23,17 @@ class Assets:
         # https://www.spriters-resource.com/amiga_amiga_cd32/lemmings/asset/37732/
         sheet = pygame.image.load("images/lemming_sheet.png").convert_alpha()
 
-        cls.animations["lemming_walk"] = cls.slice_sprites(sheet, 8, 18, 0, 16, 10, 10)
-        cls.animations["lemming_fall"] = cls.slice_sprites(sheet, 4, 14, 20, 16, 10, 10)
-        cls.animations["lemming_open"] = cls.slice_sprites(sheet, 4, 19, 96, 16, 10, 16)
+        cls.animations["lemming_walk"]  = cls.slice_sprites(sheet, 8, 18, 0, 16, 10, 10)
+        cls.animations["lemming_fall"]  = cls.slice_sprites(sheet, 4, 14, 20, 16, 10, 10)
+        cls.animations["lemming_open"]  = cls.slice_sprites(sheet, 4, 19, 96, 16, 10, 16)
         cls.animations["lemming_float"] = cls.slice_sprites(sheet, 4, 83, 96, 16, 10, 16)
-        # Die from falling
         cls.animations["lemming_splat"] = cls.slice_sprites(sheet, 16, 19, 138, 16, 10, 10)
-        cls.animations["lemming_stop"] = cls.slice_sprites(sheet, 16, 20, 148, 16, 10, 10)
-        cls.animations["lemming_burn"] = cls.slice_sprites(sheet, 16, 19, 169, 16, 10, 12)
-        cls.animations["lemming_dig"] = cls.slice_sprites(sheet, 16, 20, 247, 16, 10, 14)
-        cls.animations["lemming_boom"] = cls.slice_sprites(sheet, 16, 19, 128, 16, 10, 10)
-        cls.animations["lemming_gone"] = cls.slice_sprites(sheet, 8, 18, 182, 16, 10, 14)
+        cls.animations["lemming_stop"]  = cls.slice_sprites(sheet, 16, 20, 148, 16, 10, 10)
+        cls.animations["lemming_burn"]  = cls.slice_sprites(sheet, 16, 19, 169, 16, 10, 12)
+        cls.animations["lemming_dig"]   = cls.slice_sprites(sheet, 16, 20, 247, 16, 10, 14)
+        cls.animations["lemming_build"] = cls.slice_sprites(sheet, 16, 19, 195, 16, 10, 13)
+        cls.animations["lemming_boom"]  = cls.slice_sprites(sheet, 16, 19, 128, 16, 10, 10)
+        cls.animations["lemming_gone"]  = cls.slice_sprites(sheet, 8, 18, 182, 16, 10, 14)
 
         # https://opengameart.org/content/explosion
         sheet = pygame.image.load("images/explosion.png").convert_alpha()

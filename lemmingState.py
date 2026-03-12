@@ -3,8 +3,13 @@ class LemmingState:
         self.lem = lemming
     def update(self):
         pass
+    def on_cycle_anim(self):
+        pass
     def on_change_anim(self):
         pass
+
+class Blocker(LemmingState):
+    pass
 
 class Walker(LemmingState):
     def update(self):
@@ -80,16 +85,21 @@ class Digger(LemmingState):
                 lem.set_state("Caindo")
                 lem.set_animation("fall")
 
-class Blocker(LemmingState):
-    def update(self):
-        pass
-
 class Exploder(LemmingState):
     def on_change_anim(self):
         lem = self.lem
-        lem.game.level.digHole(lem.pos)
+        lem.game.level.dig_hole(lem.pos)
         lem.rect.x -= 12 # HACK feio! Explosao é maior
 
+class Builder(LemmingState):
+    def on_cycle_anim(self):
+        lem = self.lem
+        # Novo degrau
+        lem.game.level.add_step(lem.pos, lem.direction)
+        lem.rect.x += (4 * lem.direction)
+        lem.rect.y -= 4
+        
+# TODO relacionar com o nome da animacao e usar no set_state
 LemmingState.states = {
     "Parado": Blocker,
     "Andando": Walker,
@@ -97,4 +107,5 @@ LemmingState.states = {
     "Flutuando": Floater,
     "Cavando": Digger,
     "Explodindo": Exploder,
+    "Construindo": Builder,
 }

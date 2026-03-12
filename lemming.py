@@ -31,6 +31,9 @@ class Lemming(Entity):
     def update(self):
         self.state.update()
 
+    # Repassar os eventos para o estado
+    def on_cycle_anim(self):
+        self.state.on_cycle_anim()
     def on_change_anim(self):
         self.state.on_change_anim()
 
@@ -74,14 +77,19 @@ class Lemming(Entity):
             self.set_animation("stop")
         else:
             self.set_state("Andando")
-        self.game.level.buildBlockerMask(self.game.lemmings)
+        self.game.level.build_blocker_mask(self.game.lemmings)
 
     def dig(self):
         # Se abaixar!
         self.rect.y += 10
         self.set_state("Cavando")
         self.set_animation("dig")
-        self.frame = 0
+        self.frame = 0 # TODO
+    
+    def build(self):
+        self.set_state("Construindo")
+        self.set_animation("build")
+        self.frame = 0 # TODO
 
     def burn(self):
         self.die("burn")

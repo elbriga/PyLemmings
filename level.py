@@ -19,6 +19,10 @@ class Level:
         surf = pygame.Surface((self.explosionRadius*2, self.explosionRadius*2), pygame.SRCALPHA)
         pygame.draw.circle(surf, (255,255,255), (self.explosionRadius, self.explosionRadius), self.explosionRadius)
         self.explosionShape = pygame.mask.from_surface(surf)
+        # Degraus
+        self.stepWidth = 16
+        self.stepHeight = 4
+        self.stepShape = pygame.mask.Mask((self.stepWidth, self.stepHeight), True)
         
     # Verifica se um pixel eh solido no mapa ou nos Blocker's
     def is_solid(self, pos):
@@ -32,7 +36,7 @@ class Level:
             return False
     
     # Reconstroi a mascara dos lemmings Blockers
-    def buildBlockerMask(self, lemmings):
+    def build_blocker_mask(self, lemmings):
         self.blockerMask.clear()
         for lem in lemmings:
             if lem.stateName == "Parado":
@@ -45,7 +49,7 @@ class Level:
         pygame.draw.rect(self.terrain, self.config.backgroundColour, digRect)
         self.terrainMask.erase(self.digShape, posInt)
     
-    def digHole(self, pos):
+    def dig_hole(self, pos):
         x = int(pos[0])
         y = int(pos[1])
         # apagar visualmente no terreno
@@ -53,6 +57,16 @@ class Level:
         # remover da máscara do terreno
         self.terrainMask.erase(self.explosionShape, (x - self.explosionRadius, y - self.explosionRadius))
         
+    
+    def add_step(self, pos, direction):
+        x = int(pos[0]) + (4 * direction)
+        y = int(pos[1]) - self.stepHeight
+        if direction == -1:
+            x -= self.stepWidth
+        # criar visualmente no terreno
+        pygame.draw.rect(self.terrain, self.config.stepColour, (x, y, self.stepWidth, self.stepHeight))
+        # criar na máscara do terreno
+        self.terrainMask.draw(self.stepShape, (x, y))
 
 class LevelConfig:
     def __init__(self, number):
@@ -66,6 +80,7 @@ class LevelConfig:
         self.backgroundColour = (114, 114, 201, 255)
         self.releaseRate = 10
         self.timeLimit = 300
+        self.stepColour = (99, 0, 19, 255)
         self.load(number)
 
     def load(self, number):

@@ -53,6 +53,7 @@ class Game:
                 e.animTimer = 0
                 e.frame = (e.frame + 1) % len(e.frames)
                 if e.frame == 0 and isinstance(e, Lemming):
+                    e.on_cycle_anim()
                     if e.animNext != "":
                         e.on_change_anim()
                         e.set_animation(e.animNext)
