@@ -1,7 +1,7 @@
 class LemmingState:
     def __init__(self, lemming):
         self.lem = lemming
-    def update(self):
+    def update(self, isRecursion=False):
         pass
     def on_cycle_anim(self):
         pass
@@ -12,7 +12,7 @@ class Blocker(LemmingState):
     pass
 
 class Walker(LemmingState):
-    def update(self):
+    def update(self, isRecursion=False):
         lem = self.lem
 
         if lem.falling > lem.game.minHeightToDie:
@@ -22,6 +22,8 @@ class Walker(LemmingState):
 
         if not lem.is_on_floor():
             lem.set_state("Caindo")
+            if not isRecursion:
+                lem.update(True)
             return
 
         height = lem.floor_height_in_front()
@@ -34,11 +36,17 @@ class Walker(LemmingState):
         # Subir o terreno se preciso
         lem.rect.y -= height
 
+        lem.stateTimer += 1
+        if lem.stateTimer == 10:
+            lem.set_animation("walk")
+
 class Faller(LemmingState):
-    def update(self):
+    def update(self, isRecursion=False):
         lem = self.lem
         if lem.is_on_floor():
             lem.set_state("Andando")
+            if not isRecursion:
+                lem.update(True)
             return
 
         if lem.falling > 100:
@@ -57,7 +65,7 @@ class Faller(LemmingState):
             lem.set_animation("fall")
 
 class Floater(LemmingState):
-    def update(self):
+    def update(self, isRecursion=False):
         lem = self.lem
         if lem.is_on_floor():
             lem.set_state("Andando")
@@ -66,7 +74,7 @@ class Floater(LemmingState):
         lem.rect.y += 1
 
 class Digger(LemmingState):
-    def update(self):
+    def update(self, isRecursion=False):
         lem = self.lem
         lem.stateTimer += 1
         if lem.stateTimer > 20:
@@ -104,7 +112,7 @@ class Dying(LemmingState):
 # TODO relacionar com o nome da animacao e usar no set_state
 LemmingState.states = {
     "Parado":      (Blocker,  "stop",  ""),
-    "Andando":     (Walker,   "walk",  "") ,
+    "Andando":     (Walker,   "",      "") ,
     "Caindo":      (Faller,   "",      ""),  # Caindo nao seta anim automatico
     "Flutuando":   (Floater,  "open",  "float"),
     "Cavando":     (Digger,   "dig",   ""),

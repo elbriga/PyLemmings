@@ -10,7 +10,7 @@ class Level:
         self.terrain.set_colorkey(None)
         w, h = self.terrainMask.get_size()
         self.blockerMask = pygame.mask.Mask((w, h), False)
-        self.blockerShape = pygame.mask.Mask((40, 44), True)
+        self.blockerShape = pygame.mask.Mask((40, 80), True)
         self.digWidth = 44
         self.digHeight = 10
         self.digShape = pygame.mask.Mask((self.digWidth, self.digHeight), True) # TODO : meio-circulo

@@ -30,8 +30,8 @@ class Lemming(Entity):
                 blockArea = pygame.Rect(self.rect.x, self.rect.centery, 40, 44)
                 pygame.draw.rect(screen, (255,0,0), blockArea, 1)
 
-    def update(self):
-        self.state.update()
+    def update(self, isRecursion=False):
+        self.state.update(isRecursion)
 
     # Repassar os eventos para o estado
     def on_cycle_anim(self):
@@ -76,6 +76,7 @@ class Lemming(Entity):
             self.set_animation(stateAnim, stateAnimN)
         if die:
             self.dead = True
+            # Remover da mascara de block
             self.game.level.build_blocker_mask(self.game.lemmings)
 
     def die(self, anim, nextAnim=""):
@@ -85,6 +86,7 @@ class Lemming(Entity):
     def toggleBlock(self):
         novoEstado = "Parado" if (self.stateName == "Andando") else "Andando"
         self.set_state(novoEstado)
+        # Adicionar na mascara de Block
         self.game.level.build_blocker_mask(self.game.lemmings)
 
     def dig(self):
