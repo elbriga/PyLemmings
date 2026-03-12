@@ -8,7 +8,7 @@ class Game:
         self.screen = screen
         self.running = True  # Controla o loop principal
         self.quitting = False
-        self.entities = []
+        self.lemmings = []
         self.level = Level(1)
         self.points = 0
         self.totLemmings = 0
@@ -23,10 +23,6 @@ class Game:
         self.skillsFont = pygame.font.SysFont(None, 30)
         Assets.load()
     
-    @property
-    def lemmings(self):
-        return (e for e in self.entities if isinstance(e, Lemming) and not e.dead)
-
     def quit(self):
         self.armaggedon(True)
 
@@ -49,30 +45,29 @@ class Game:
             if self.addTimer > self.level.config.releaseRate:
                 self.addTimer = 0
                 self.totLemmings += 1
-                self.entities.append(Lemming(self))
+                self.lemmings.append(Lemming(self))
 
         # Atualizar as entidades
-        for e in self.entities[:]:
-            if not e.dead:
-                e.update()
+        for lem in self.lemmings[:]:
+            if not lem.dead:
+                lem.update()
                 # Checar pela saida
-                if isinstance(e, Lemming):
-                    if e.is_near(self.level.config.endPosition, 15):
-                        self.points += 1
-                        e.die("gone")
+                if lem.is_near(self.level.config.endPosition, 15):
+                    self.points += 1
+                    lem.die("gone")
 
             # Animacao
-            e.animTimer += 1
-            if e.animTimer > 3:
-                e.animTimer = 0
-                e.frame = (e.frame + 1) % len(e.frames)
-                if e.frame == 0 and isinstance(e, Lemming):
-                    e.on_cycle_anim()
-                    if e.animNext != "":
-                        e.on_change_anim()
-                        e.set_animation(e.animNext)
-                    elif e.dead:
-                        self.entities.remove(e)
+            lem.animTimer += 1
+            if lem.animTimer > 3:
+                lem.animTimer = 0
+                lem.frame = (lem.frame + 1) % len(lem.frames)
+                if lem.frame == 0:
+                    lem.on_cycle_anim()
+                    if lem.animNext != "":
+                        lem.on_change_anim()
+                        lem.set_animation(lem.animNext)
+                    elif lem.dead:
+                        self.lemmings.remove(lem)
                         if self.quitting and len(self.lemmings) == 0:
                             self.running = False # Quebra o loop principal
 
@@ -91,9 +86,9 @@ class Game:
                 unsetcolor=(0, 0, 0, 0)
             )
             self.screen.blit(mask_surface, (0, 0))
-        # Desenhar as entidades
-        for e in self.entities:
-            e.draw()
+        # Desenhar os Lemmings
+        for lem in self.lemmings:
+            lem.draw()
         # Desenhar o selecionado
         if self.hovered:
             pygame.draw.circle(self.screen, (0, 255, 0), (self.hovered.x, self.hovered.y - self.hovered.rect.height // 4), 25, 3)
