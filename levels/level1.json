@@ -9,7 +9,8 @@
   "background": "cave",
 
   "skills": {
-    "umbrella": 8
+    "Umbrella": 1,
+    "Exploder": 3
   },
 
   "objects": [

@@ -57,7 +57,7 @@ class Level:
         # remover da máscara do terreno
         self.terrainMask.erase(self.explosionShape, (x - self.explosionRadius, y - self.explosionRadius))
         
-    
+    # Adicionar um degrau
     def add_step(self, pos, direction):
         x = int(pos[0]) + (4 * direction)
         y = int(pos[1]) - self.stepHeight
@@ -72,7 +72,13 @@ class LevelConfig:
     def __init__(self, number):
         # Defaults
         self.number = number
-        self.skills = {}
+        self.skills = {
+            "Blocker":  0,
+            "Exploder": 0,
+            "Digger":   0,
+            "Builder":  0,
+            "Umbrella": 0,
+        }
         self.numLemmings = 10
         self.numLemmingsToSave = 8
         self.startPosition = (100, 100)
@@ -88,6 +94,8 @@ class LevelConfig:
         with open(f"levels/level{number}.json") as f:
             conf = json.load(f)
             for key, value in conf.items():
+                if key == "skills":
+                    self.loadSkills(value)
                 if key == "objects":
                     for o in conf["objects"]:
                         if o['type'] == 'entrance':
@@ -98,3 +106,9 @@ class LevelConfig:
                     self.backgroundColour = (value[0], value[1], value[2], 255)
                 elif hasattr(self, key):
                     setattr(self, key, value)
+    
+    def loadSkills(self, skillsJson):
+        for key, value in skillsJson.items():
+            if key in self.skills:
+                self.skills[key] += value
+        self.skills = {k: v for k, v in self.skills.items() if v > 0} # Remover as skills com 0

@@ -21,7 +21,7 @@ class Walker(LemmingState):
         lem.falling = 0
 
         if not lem.is_on_floor():
-            lem.set_state("Caindo")
+            lem.set_state("Faller")
             if not isRecursion:
                 lem.update(True)
             return
@@ -44,7 +44,7 @@ class Faller(LemmingState):
     def update(self, isRecursion=False):
         lem = self.lem
         if lem.is_on_floor():
-            lem.set_state("Andando")
+            lem.set_state("Walker")
             if not isRecursion:
                 lem.update(True)
             return
@@ -60,7 +60,7 @@ class Faller(LemmingState):
 
         if lem.falling > 100:
             if lem.hasUmbrella:
-                lem.set_state("Flutuando")
+                lem.set_state("Floater")
         elif lem.falling > 20 and lem.falling < 26:
             lem.set_animation("fall")
 
@@ -68,7 +68,7 @@ class Floater(LemmingState):
     def update(self, isRecursion=False):
         lem = self.lem
         if lem.is_on_floor():
-            lem.set_state("Andando")
+            lem.set_state("Walker")
             return
 
         lem.rect.y += 1
@@ -84,7 +84,7 @@ class Digger(LemmingState):
             lem.rect.y += 3
             if not lem.is_on_floor():
                 lem.game.level.dig((lem.rect.x - 2, lem.rect.bottom - 10))
-                lem.set_state("Caindo")
+                lem.set_state("Faller")
 
 class Exploder(LemmingState):
     def on_change_anim(self):
@@ -96,7 +96,7 @@ class Builder(LemmingState):
     def on_cycle_anim(self):
         lem = self.lem
         if lem.stateTimer >= lem.stepCount:
-            lem.set_state("Andando")
+            lem.set_state("Walker")
             return
         elif lem.stateTimer >= lem.stepCount - 1:
             lem.set_animation("done")
@@ -111,12 +111,12 @@ class Dying(LemmingState):
         
 # TODO relacionar com o nome da animacao e usar no set_state
 LemmingState.states = {
-    "Parado":      (Blocker,  "stop",  ""),
-    "Andando":     (Walker,   "",      "") ,
-    "Caindo":      (Faller,   "",      ""),  # Caindo nao seta anim automatico
-    "Flutuando":   (Floater,  "open",  "float"),
-    "Cavando":     (Digger,   "dig",   ""),
-    "Explodindo":  (Exploder, "boom",  "explosion"),
-    "Construindo": (Builder,  "build", ""),
-    "Morrendo":    (Dying,    "",      ""),  # Usado no lemming.die()
+    "Blocker":  (Blocker,  "stop",  ""),
+    "Walker":   (Walker,   "",      "") ,
+    "Faller":   (Faller,   "",      ""),  # Faller nao seta anim automatico
+    "Floater":  (Floater,  "open",  "float"),
+    "Digger":   (Digger,   "dig",   ""),
+    "Exploder": (Exploder, "boom",  "explosion"),
+    "Builder":  (Builder,  "build", ""),
+    "Dying":    (Dying,    "",      ""),  # Usado no lemming.die()
 }

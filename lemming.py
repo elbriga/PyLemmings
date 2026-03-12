@@ -6,13 +6,13 @@ class Lemming(Entity):
     def __init__(self, game, **kwargs):
         Entity.__init__(self, game, 40, 80)
         self.stateName = ""
-        self.stateTimer = 0 # Timer para os estados, usado em: Cavando,
+        self.stateTimer = 0 # Timer auxiliar para os estados
         self.direction = 1
         self.climbHeight = 5
         self.stepCount = 20 # Quantos degraus tem na bolsa!
         self.falling = 0
         self.hasUmbrella = False
-        self.set_state("Caindo")  # Caindo nao seta a animation!
+        self.set_state("Faller")  # Faller nao seta a animation!
         self.set_animation("fall")
 
     def draw(self):
@@ -21,12 +21,12 @@ class Lemming(Entity):
         if self.direction == -1:
             frame = pygame.transform.flip(frame, True, False)
         screen.blit(frame, self.rect)
-        if self.hasUmbrella and self.stateName == "Andando":
+        if self.hasUmbrella and self.stateName == "Walker":
             pygame.draw.circle(screen, (255, 255, 0), self.pos, 5)
         if self.game.debug:
             pygame.draw.circle(screen, (255, 0, 0), (self.rect.right, self.rect.bottom + 1), 5)
             pygame.draw.circle(screen, (255, 255, 0), (self.rect.left, self.rect.bottom + 1), 5)
-            if self.stateName == "Parado":
+            if self.stateName == "Blocker":
                 blockArea = pygame.Rect(self.rect.x, self.rect.centery, 40, 44)
                 pygame.draw.rect(screen, (255,0,0), blockArea, 1)
 
@@ -38,6 +38,16 @@ class Lemming(Entity):
         self.state.on_cycle_anim()
     def on_change_anim(self):
         self.state.on_change_anim()
+    
+    def give_skill(self):
+        game = self.game
+        skill = game.selectedSkill
+        if game.level.config.skills[skill] > 0:
+            game.level.config.skills[skill] -= 1
+            if skill == "Umbrella":
+                self.hasUmbrella = True
+            else:
+                self.set_state(skill)
 
     def is_near(self, pos, distance):
         area = pygame.Rect(pos[0] - distance, pos[1] - distance, distance * 2, distance * 2)
@@ -63,9 +73,10 @@ class Lemming(Entity):
 
         return height
 
-    def set_state(self, stateName, die=False):
+    def set_state(self, stateName):
         self.stateName = stateName
         self.stateTimer = 0
+        die = stateName == "Exploder" or stateName == "Dying"
 
         stateClass = LemmingState.states[stateName][0]
         self.state = stateClass(self)
@@ -80,11 +91,11 @@ class Lemming(Entity):
             self.game.level.build_blocker_mask(self.game.lemmings)
 
     def die(self, anim, nextAnim=""):
-        self.set_state("Morrendo", True)
+        self.set_state("Dying")
         self.set_animation(anim, nextAnim)
     
     def toggleBlock(self):
-        novoEstado = "Parado" if (self.stateName == "Andando") else "Andando"
+        novoEstado = "Blocker" if (self.stateName == "Walker") else "Walker"
         self.set_state(novoEstado)
         # Adicionar na mascara de Block
         self.game.level.build_blocker_mask(self.game.lemmings)
@@ -92,13 +103,13 @@ class Lemming(Entity):
     def dig(self):
         # Se abaixar!
         self.rect.y += 10
-        self.set_state("Cavando")
+        self.set_state("Digger")
     
     def build(self):
-        self.set_state("Construindo")
+        self.set_state("Builder")
 
     def burn(self):
         self.die("burn")
 
     def explode(self):
-        self.set_state("Explodindo", True)
+        self.set_state("Exploder")

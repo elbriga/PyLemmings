@@ -3,7 +3,7 @@ import pygame
 from game import Game
 from events import Events
 
-# screen size
+# Tamanho da Janela
 HEIGHT=800
 WIDTH=800
 
@@ -11,20 +11,17 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PyLemmings")
 
-jogo = Game(screen)
+game = Game(screen)
 
 clock = pygame.time.Clock()
-running = True
-while running:
+while game.running:
     for event in pygame.event.get():
-        running = Events.exec(jogo, event)
-        if not running:
-            break
+        Events.exec(game, event)
 
-    jogo.update()
+    game.update()
 
     screen.fill((0,0,0))
-    jogo.draw()
+    game.draw()
 
     pygame.display.flip()
     clock.tick(60) # game.speed

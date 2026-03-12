@@ -4,29 +4,42 @@ class Events:
     @staticmethod
     def exec(game, event):
         #print(event)
+        if game.quitting:
+            return
+
         if event.type == pygame.QUIT:
-            return False
+            game.quit()
         
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
-                return False
+            match event.key:
+                case pygame.K_q:
+                    game.quit()
             
-            if event.key == pygame.K_p:
-                game.togglePaused()
+                case pygame.K_p:
+                    game.toggle_paused()
+                case pygame.K_m:
+                    game.toggle_show_mask()
 
-            if event.key == pygame.K_m:
-                game.toggleShowMask()
+                case pygame.K_b:
+                    game.select_skill("Blocker")
+                case pygame.K_x:
+                    game.select_skill("Exploder")
+                case pygame.K_d:
+                    game.select_skill("Digger")
+                case pygame.K_c:
+                    game.select_skill("Builder")
+                case pygame.K_g:
+                    game.select_skill("Umbrella")
             
         if event.type == pygame.MOUSEBUTTONDOWN:
             if game.hovered:
                 lem = game.hovered
-                if event.button == 1:  # botao esquerdo
-                    lem.hasUmbrella = True
+                match event.button:
+                    case 1:  # botao esquerdo
+                        lem.give_skill()
 
-                if event.button == 2:  # botao meio
-                    lem.toggleBlock()
+                    case 2:  # botao meio
+                        lem.burn()
 
-                if event.button == 3:  # botao direito
-                    lem.explode()
-        
-        return True
+                    case 3:  # botao direito
+                        lem.jump()
