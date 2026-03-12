@@ -76,6 +76,7 @@ class Lemming(Entity):
             self.set_animation(stateAnim, stateAnimN)
         if die:
             self.dead = True
+            self.game.level.build_blocker_mask(self.game.lemmings)
 
     def die(self, anim, nextAnim=""):
         self.set_state("Morrendo", True)

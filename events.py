@@ -27,6 +27,6 @@ class Events:
                     lem.toggleBlock()
 
                 if event.button == 3:  # botao direito
-                    lem.build()
+                    lem.burn()
         
         return True

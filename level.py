@@ -39,7 +39,7 @@ class Level:
     def build_blocker_mask(self, lemmings):
         self.blockerMask.clear()
         for lem in lemmings:
-            if lem.stateName == "Parado":
+            if lem.stateName == "Parado" and not lem.dead:
                 self.blockerMask.draw(self.blockerShape, (lem.rect.x, lem.rect.centery))
     
     # Corta um pedaco do terreno
