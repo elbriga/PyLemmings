@@ -9,6 +9,7 @@ class Lemming(Entity):
         self.stateTimer = 0 # Timer para os estados, usado em: Cavando,
         self.direction = 1
         self.climbHeight = 5
+        self.stepCount = 20 # Quantos degraus tem na bolsa!
         self.falling = 0
         self.hasUmbrella = False
         self.set_state("Andando")
@@ -44,6 +45,7 @@ class Lemming(Entity):
     def is_on_floor(self):
         return (
             self.game.level.is_solid((self.rect.left, self.rect.bottom + 1)) or
+            self.game.level.is_solid((self.x, self.rect.bottom + 1)) or
             self.game.level.is_solid((self.rect.right, self.rect.bottom + 1))
         )
 
