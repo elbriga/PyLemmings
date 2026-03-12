@@ -16,14 +16,9 @@ class Walker(LemmingState):
         lem = self.lem
 
         if lem.falling > lem.game.minHeightToDie:
-            # Die!
-            lem.set_animation("splat")
-            lem.frame = 0
-            lem.dead = True
+            lem.die("splat")
             return
         lem.falling = 0
-
-        lem.set_animation("walk")
 
         if not lem.is_on_floor():
             lem.set_state("Caindo")
@@ -58,8 +53,7 @@ class Faller(LemmingState):
         if lem.falling > 100:
             if lem.hasUmbrella:
                 lem.set_state("Flutuando")
-                lem.set_animation("open", "float")
-        elif lem.falling > 10:
+        elif lem.falling > 20 and lem.falling < 26:
             lem.set_animation("fall")
 
 class Floater(LemmingState):
@@ -83,7 +77,6 @@ class Digger(LemmingState):
             if not lem.is_on_floor():
                 lem.game.level.dig((lem.rect.x - 2, lem.rect.bottom - 10))
                 lem.set_state("Caindo")
-                lem.set_animation("fall")
 
 class Exploder(LemmingState):
     def on_change_anim(self):
@@ -107,11 +100,11 @@ class Builder(LemmingState):
         
 # TODO relacionar com o nome da animacao e usar no set_state
 LemmingState.states = {
-    "Parado": Blocker,
-    "Andando": Walker,
-    "Caindo": Faller,
-    "Flutuando": Floater,
-    "Cavando": Digger,
-    "Explodindo": Exploder,
-    "Construindo": Builder,
+    "Parado":      (Blocker,  "stop",  ""),
+    "Andando":     (Walker,   "walk",  "") ,
+    "Caindo":      (Faller,   "",      ""),  # Caindo nao seta anim automatico
+    "Flutuando":   (Floater,  "open",  "float"),
+    "Cavando":     (Digger,   "dig",   ""),
+    "Explodindo":  (Exploder, "boom",  "explosion"),
+    "Construindo": (Builder,  "build", ""),
 }

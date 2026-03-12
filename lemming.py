@@ -12,7 +12,8 @@ class Lemming(Entity):
         self.stepCount = 20 # Quantos degraus tem na bolsa!
         self.falling = 0
         self.hasUmbrella = False
-        self.set_state("Andando")
+        self.set_state("Caindo")  # Caindo nao seta a animation!
+        self.set_animation("fall")
 
     def draw(self):
         screen = self.game.screen
@@ -65,36 +66,35 @@ class Lemming(Entity):
     def set_state(self, stateName):
         self.stateName = stateName
         self.stateTimer = 0
-        self.state = LemmingState.states[stateName](self)
+
+        stateClass = LemmingState.states[stateName][0]
+        self.state = stateClass(self)
+        
+        stateAnim = LemmingState.states[stateName][1]
+        if stateAnim != "":
+            stateAnimN = LemmingState.states[stateName][2]
+            self.set_animation(stateAnim, stateAnimN)
 
     def die(self, anim, nextAnim="", state="Parado"):
         self.set_state(state)
         self.set_animation(anim, nextAnim)
-        self.frame = 0
         self.dead = True
     
     def toggleBlock(self):
-        if (self.stateName == "Andando"):
-            self.set_state("Parado")
-            self.set_animation("stop")
-        else:
-            self.set_state("Andando")
+        novoEstado = "Parado" if (self.stateName == "Andando") else "Andando"
+        self.set_state(novoEstado)
         self.game.level.build_blocker_mask(self.game.lemmings)
 
     def dig(self):
         # Se abaixar!
         self.rect.y += 10
         self.set_state("Cavando")
-        self.set_animation("dig")
-        self.frame = 0 # TODO
     
     def build(self):
         self.set_state("Construindo")
-        self.set_animation("build")
-        self.frame = 0 # TODO
 
     def burn(self):
         self.die("burn")
 
     def explode(self):
-        self.die("boom", "explosion", "Explodindo")
+        self.set_state("Explodindo")

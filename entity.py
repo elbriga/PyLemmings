@@ -33,8 +33,7 @@ class Entity:
     def set_animation(self, name, next=""):
         self.frames = Assets.animations[f"lemming_{name}"]
         self.animNext = next
-        # TODO :: set state ja setar a animacao tambem?
-        #self.frame = 0
+        self.frame = 0
     
     # Invocado quando a animacao reseta
     def on_cycle_anim(self):
