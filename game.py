@@ -47,7 +47,7 @@ class Game:
                 self.totLemmings += 1
                 self.lemmings.append(Lemming(self))
 
-        # Atualizar as entidades
+        # Atualizar os Lemmings
         for lem in self.lemmings[:]:
             if not lem.dead:
                 lem.update()
