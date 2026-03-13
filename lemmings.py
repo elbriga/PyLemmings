@@ -11,7 +11,7 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PyLemmings")
 
-game = Game(screen, 3)
+game = Game(screen, 2)
 
 clock = pygame.time.Clock()
 while game.running:
