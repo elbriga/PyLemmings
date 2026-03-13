@@ -11,12 +11,15 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PyLemmings")
 
-game = Game(screen)
+game = Game(screen, 1)
 
 clock = pygame.time.Clock()
 while game.running:
     for event in pygame.event.get():
         Events.exec(game, event)
+    
+    if game.newLevel:
+        game = Game(screen, game.newLevel)
 
     game.update()
 

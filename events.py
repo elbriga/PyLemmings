@@ -5,12 +5,19 @@ class Events:
     def exec(game, event):
         #print(event)
         if game.quitting:
+            # Nao tratar eventos na animacao de Quit
+            return
+        
+        if game.endScene:
+            # Tratar os eventos de End Scene
+            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                game.new()
             return
 
         if event.type == pygame.QUIT:
             game.quit()
         
-        if event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN:
             match event.key:
                 case pygame.K_q:
                     game.quit()
@@ -31,7 +38,7 @@ class Events:
                 case pygame.K_g:
                     game.select_skill("Umbrella")
             
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN:
             if game.hovered:
                 lem = game.hovered
                 match event.button:

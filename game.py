@@ -4,14 +4,15 @@ from lemming import Lemming
 from level import Level
 
 class Game:
-    def __init__(self, screen):
+    def __init__(self, screen, numLevel):
         self.screen = screen
         self.width, self.height = screen.get_size()
         self.running = True  # Controla o loop principal
         self.quitting = False
         self.endScene = None
         self.lemmings = []
-        self.level = Level(1)
+        self.level = Level(numLevel)
+        self.newLevel = None # Controla o Spawn de um novo Level ou o mesmo (reset)
         self.points = 0
         self.totLemmings = 0
         self.selectedSkill = ""
@@ -36,6 +37,12 @@ class Game:
             self.quitting = True
         for l in self.lemmings:
             l.set_state("Exploder")
+    
+    def new(self):
+        self.newLevel = self.level.config.number
+        if self.points >= self.level.config.numLemmingsToSave:
+            # Win!
+            self.newLevel += 1
     
     def update(self):
         mx, my = pygame.mouse.get_pos()
