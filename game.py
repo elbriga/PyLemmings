@@ -6,8 +6,10 @@ from level import Level
 class Game:
     def __init__(self, screen):
         self.screen = screen
+        self.width, self.height = screen.get_size()
         self.running = True  # Controla o loop principal
         self.quitting = False
+        self.endScene = None
         self.lemmings = []
         self.level = Level(1)
         self.points = 0
@@ -24,7 +26,10 @@ class Game:
         Assets.load()
     
     def quit(self):
-        self.armaggedon(True)
+        if len(self.lemmings) == 0:
+            self.running = False
+        else:
+            self.armaggedon(True)
 
     def armaggedon(self, quit=False):
         if quit:
@@ -55,6 +60,9 @@ class Game:
                 if lem.is_near(self.level.config.endPosition, 15):
                     self.points += 1
                     lem.die("gone")
+                # Checar se caiu para fora da tela
+                elif lem.rect.y > self.height:
+                    lem.die("null")
 
             # Animacao
             lem.animTimer += 1
@@ -67,9 +75,17 @@ class Game:
                         lem.on_change_anim()
                         lem.set_animation(lem.animNext)
                     elif lem.dead:
+                        # Remover os lemmings mortos no final da animacao
                         self.lemmings.remove(lem)
-                        if self.quitting and len(self.lemmings) == 0:
-                            self.running = False # Quebra o loop principal
+                        # Verificar se terminou a fase
+                        if len(self.lemmings) == 0:
+                            if self.quitting:
+                                self.running = False # Quebra o loop principal
+                            else:
+                                # Mostrar a tela de End Level
+                                win = self.points >= self.level.config.numLemmingsToSave
+                                self.endScene = pygame.image.load(f'images/end{"Win" if win else "Lose"}.png').convert()
+                                self.paused = True
 
     def draw(self):
         # Desenhar o level
@@ -93,7 +109,7 @@ class Game:
         if self.hovered:
             pygame.draw.circle(self.screen, (0, 255, 0), (self.hovered.x, self.hovered.y - self.hovered.rect.height // 4), 25, 3)
         # Desenhar o score
-        text = self.scoreFont.render(f"Pontos: {self.points} / {self.level.config.numLemmingsToSave}", True, (255, 255, 255))
+        text = self.scoreFont.render(f"Lemmings: {len(self.lemmings)} - Pontos: {self.points} / {self.level.config.numLemmingsToSave}", True, (255, 255, 255))
         self.screen.blit(text, (10, 10))
         # Desenhar as Skills
         i = 0
@@ -102,8 +118,16 @@ class Game:
                 continue
             colour = (0, 255, 255) if key == self.selectedSkill else (255, 255, 255)
             text = self.skillsFont.render(f"{key}: {val}", True, colour)
-            self.screen.blit(text, (300, 10 + i * 20))
+            self.screen.blit(text, (400, 10 + i * 20))
             i += 1
+        
+        if self.endScene:
+            w, h = self.endScene.get_size()
+            x = self.width // 2 - w // 2
+            y = self.height // 2 - h // 2
+            self.screen.blit(self.endScene, (x, y))
+            b = 5
+            pygame.draw.rect(self.screen, (255,255,255,255), (x-b,y-b,w+b,h+b), 10, 10)
     
     def get_lemming_near(self, pos, radius=80):
         best = None
