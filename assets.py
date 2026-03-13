@@ -47,3 +47,7 @@ class Assets:
                 sprite.blit(sheet, (0, 100 - explosionSize), (x, y, explosionSize, explosionSize))
                 #sprite.set_colorkey((0, 0, 0))
                 cls.animations["lemming_explosion"].append(sprite.convert_alpha())
+        
+        # Objects
+        cls.animations["object_exit"] = [ pygame.image.load("images/portal.png").convert_alpha() ]
+        cls.animations["object_tnt"]  = [ pygame.image.load("images/tnt.png").convert_alpha() ]

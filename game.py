@@ -2,6 +2,7 @@ import pygame
 from assets import Assets
 from lemming import Lemming
 from level import Level
+from object import Object
 
 class Game:
     def __init__(self, screen, numLevel):
@@ -11,6 +12,7 @@ class Game:
         self.quitting = False
         self.endScene = None
         self.lemmings = []
+        self.objects = []
         self.level = Level(numLevel)
         self.newLevel = None # Controla o Spawn de um novo Level ou o mesmo (reset)
         self.points = 0
@@ -25,6 +27,7 @@ class Game:
         self.scoreFont = pygame.font.SysFont(None, 40)
         self.skillsFont = pygame.font.SysFont(None, 30)
         Assets.load()
+        self.load_objects()
     
     def quit(self):
         if len(self.lemmings) == 0:
@@ -95,6 +98,8 @@ class Game:
                                 self.paused = True
 
     def draw(self):
+        self.screen.fill(self.level.config.backgroundColour)
+
         # Desenhar o level
         if not self.showMask:            
             self.screen.blit(self.level.terrain, (0, 0))
@@ -109,6 +114,9 @@ class Game:
                 unsetcolor=(0, 0, 0, 0)
             )
             self.screen.blit(mask_surface, (0, 0))
+        # Desenhar os Objetos
+        for o in self.objects:
+            o.draw(self.screen)
         # Desenhar os Lemmings
         for lem in self.lemmings:
             lem.draw()
@@ -158,3 +166,11 @@ class Game:
     def select_skill(self, skillName):
         if skillName in self.level.config.skills:
             self.selectedSkill = skillName
+    
+    def load_objects(self):
+        for o in self.level.config.objects:
+            # Verificar se existe nos Assets
+            type = "object_" + o["type"]
+            if type in Assets.animations:
+                self.objects.append(Object(o))
+            

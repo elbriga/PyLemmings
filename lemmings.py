@@ -11,7 +11,7 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PyLemmings")
 
-game = Game(screen, 2)
+game = Game(screen, 1)
 
 clock = pygame.time.Clock()
 while game.running:
@@ -22,8 +22,6 @@ while game.running:
         game = Game(screen, game.newLevel)
 
     game.update()
-
-    screen.fill((0,0,0))
     game.draw()
 
     pygame.display.flip()

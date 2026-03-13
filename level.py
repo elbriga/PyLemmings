@@ -83,6 +83,7 @@ class LevelConfig:
             "Builder":  0,
             "Umbrella": 0,
         }
+        self.objects = []
         self.numLemmings = 10
         self.numLemmingsToSave = 8
         self.startPosition = (100, 100)
@@ -101,6 +102,7 @@ class LevelConfig:
                 if key == "skills":
                     self.loadSkills(value)
                 elif key == "objects":
+                    self.objects = value
                     for o in conf["objects"]:
                         if o['type'] == 'entrance':
                             self.startPosition = (o['x'], o['y'])
