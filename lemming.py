@@ -55,9 +55,9 @@ class Lemming(Entity):
     
     def is_on_floor(self):
         return (
-            self.game.level.is_solid((self.rect.left, self.rect.bottom + 1)) or
-            self.game.level.is_solid((self.x, self.rect.bottom + 1)) or
-            self.game.level.is_solid((self.rect.right, self.rect.bottom + 1))
+            self.game.level.is_solid(self.rect.left, self.rect.bottom + 1) or
+            self.game.level.is_solid(self.x, self.rect.bottom + 1) or
+            self.game.level.is_solid(self.rect.right, self.rect.bottom + 1)
         )
 
     def floor_height_in_front(self):
@@ -65,8 +65,8 @@ class Lemming(Entity):
         # Achar a altura do chao na frente do lemming, ate a altura que ele consegue subir
         while height <= self.climbHeight:
             # O pixel 'na frente' do lemming depende da direcao dele
-            positionInFront = (self.rect.right if self.direction == 1 else self.rect.left, self.rect.bottom - height)
-            if not self.game.level.is_solid(positionInFront):
+            positionInFront = self.rect.right if self.direction == 1 else self.rect.left
+            if not self.game.level.is_solid(positionInFront, self.rect.bottom - height):
                 break
 
             height += 1
