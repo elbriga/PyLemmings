@@ -67,7 +67,7 @@ class Game:
             if not lem.dead:
                 lem.update()
                 # Checar pela saida
-                if lem.is_near(self.level.config.endPosition, 15):
+                if lem.is_near(self.level.config.endPosition, 6):
                     self.points += 1
                     lem.die("gone")
                 # Checar se caiu para fora da tela
@@ -168,9 +168,9 @@ class Game:
             self.selectedSkill = skillName
     
     def load_objects(self):
-        for o in self.level.config.objects:
+        for objDef in self.level.config.objects:
             # Verificar se existe nos Assets
-            type = "object_" + o["type"]
+            type = "object_" + objDef["type"]
             if type in Assets.animations:
-                self.objects.append(Object(o))
+                self.objects.append(Object(self, objDef))
             

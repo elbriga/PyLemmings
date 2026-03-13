@@ -50,8 +50,9 @@ class Lemming(Entity):
                 self.set_state(skill)
 
     def is_near(self, pos, distance):
-        area = pygame.Rect(pos[0] - distance, pos[1] - distance, distance * 2, distance * 2)
-        return self.rect.colliderect(area)
+        myRect = pygame.Rect(self.x - distance, self.y - distance, distance * 2, distance * 2)
+        target = pygame.Rect(pos[0] - distance, pos[1] - distance, distance * 2, distance * 2)
+        return myRect.colliderect(target)
     
     def is_on_floor(self):
         return (
