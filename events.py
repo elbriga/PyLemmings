@@ -8,14 +8,14 @@ class Events:
             # Nao tratar eventos na animacao de Quit
             return
         
+        if event.type == pygame.QUIT:
+            game.quit()
+
         if game.endScene:
             # Tratar os eventos de End Scene
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                 game.new()
             return
-
-        if event.type == pygame.QUIT:
-            game.quit()
         
         elif event.type == pygame.KEYDOWN:
             match event.key:
