@@ -42,7 +42,7 @@ class Lemming(Entity):
     def give_skill(self):
         game = self.game
         skill = game.selectedSkill
-        if game.level.config.skills[skill] > 0:
+        if skill != "" and game.level.config.skills[skill] > 0:
             game.level.config.skills[skill] -= 1
             if skill == "Umbrella":
                 self.hasUmbrella = True
