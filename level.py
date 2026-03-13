@@ -5,11 +5,11 @@ class Level:
     def __init__(self, number):
         self.config = LevelConfig(number)
         self.terrain = pygame.image.load(f'levels/level{number}.png').convert()
-        self.terrain.set_colorkey(self.config.backgroundColour)
-        self.terrainMask = pygame.mask.from_surface(self.terrain)
-        self.terrain.set_colorkey(None)
-        w, h = self.terrainMask.get_size()
-        self.blockerMask = pygame.mask.Mask((w, h), False)
+        self.width, self.height = self.terrain.get_size()
+        terrainMaskImage = pygame.image.load(f'levels/level{number}-mask.png').convert()
+        terrainMaskImage.set_colorkey((0, 0, 0, 255))
+        self.terrainMask = pygame.mask.from_surface(terrainMaskImage)
+        self.blockerMask = pygame.mask.Mask((self.width, self.height), False)
         self.blockerShape = pygame.mask.Mask((40, 80), True)
         self.digWidth = 44
         self.digHeight = 10
@@ -17,7 +17,7 @@ class Level:
         # criar máscara circular
         self.explosionRadius = 40
         surf = pygame.Surface((self.explosionRadius*2, self.explosionRadius*2), pygame.SRCALPHA)
-        pygame.draw.circle(surf, (255,255,255), (self.explosionRadius, self.explosionRadius), self.explosionRadius)
+        pygame.draw.circle(surf, (255, 255, 255), (self.explosionRadius, self.explosionRadius), self.explosionRadius)
         self.explosionShape = pygame.mask.from_surface(surf)
         # Degraus
         self.stepWidth = 16
@@ -25,15 +25,19 @@ class Level:
         self.stepShape = pygame.mask.Mask((self.stepWidth, self.stepHeight + 2), True)
         
     # Verifica se um pixel eh solido no mapa ou nos Blocker's
-    def is_solid(self, pos):
-        posInt = (int(pos[0]), int(pos[1]))
+    def is_solid(self, x, y):
+        if x < 0 or x >= self.width or y < 0:
+            return True
+        if y >= self.height:
+            return False # Permitir cair para baixo
         try:
+            posInt = (int(x), int(y))
             return (
                 self.terrainMask.get_at(posInt) or
                 self.blockerMask.get_at(posInt)
             )
         except IndexError:
-            return False
+            return True # Nao e para cair aqui!
     
     # Reconstroi a mascara dos lemmings Blockers
     def build_blocker_mask(self, lemmings):
